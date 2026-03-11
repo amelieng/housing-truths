@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Vanilla/.claude/projects/C--Users-Vanilla-Downloads-State-of-ma-state-of-ma/**)",
+      "Read(//c/Users/Vanilla/.claude/projects/C--Users-Vanilla-Downloads-State-of-ma-state-of-ma/memory/**)"
+    ]
+  }
+}
