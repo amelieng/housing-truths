@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The House That Income Can't Reach — Boston's Housing Truths</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #F7F6F3;
+    font-family: 'Lato', sans-serif;
+    color: #1C1916;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 100%;
+    margin: 0;
+    padding: 0 0 48px;
+  }
+
+  .pillar-tag {
+    font-family: 'Lato', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4A7C74;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+    color: #1C1916;
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: #6B6560;
+    line-height: 1.65;
+    max-width: 680px;
+    margin-bottom: 24px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 14px 18px;
+    background: white;
+    border: 1px solid #E2DDD6;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    color: #6B6560;
+    line-height: 1.3;
+  }
+
+  .legend-swatch {
+    flex-shrink: 0;
+  }
+
+  .chart-wrap {
+    background: white;
+    border: 1px solid #E2DDD6;
+    border-radius: 10px;
+    padding: 24px 12px 16px;
+    margin-bottom: 20px;
+  }
+
+  .note {
+    background: #EDE9E3;
+    border-left: 3px solid #C4BDB7;
+    padding: 12px 16px;
+    font-size: 12.5px;
+    color: #6B6560;
+    line-height: 1.6;
+    border-radius: 0 4px 4px 0;
+  }
+
+  #tooltip {
+    position: fixed;
+    background: rgba(28, 25, 22, 0.93);
+    color: #F5F2EE;
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-family: 'Lato', sans-serif;
+    font-size: 12.5px;
+    max-width: 240px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    z-index: 100;
+    line-height: 1.55;
+  }
+
+  #tooltip .tt-year {
+    font-size: 13.5px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #F5F2EE;
+  }
+
+  #tooltip .tt-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 11px;
+  }
+
+  #tooltip .tt-row .tt-label {
+    color: #A09C97;
+  }
+
+  #tooltip .tt-row .tt-val {
+    color: #F5F2EE;
+    text-align: right;
+  }
+
+  #tooltip .tt-row .tt-val.red {
+    color: #E89090;
+  }
+
+  #tooltip .tt-price {
+    font-size: 12px;
+    color: #C8C2BA;
+    margin-bottom: 7px;
+    font-family: 'Lato', sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="pillar-tag">Boston's Housing Truths &middot; II</div>
+  <h1>The House That Income Can't Reach</h1>
+  <p class="subtitle">Each year shows the monthly cost of buying Boston's median home against what a typical household could support. Prices climbed, then rates exploded — and the gap between what homes cost and what incomes can carry became a chasm.</p>
+
+  <!-- Reading key -->
+  <div class="legend">
+    <!-- Mini house icon -->
+    <div class="legend-item">
+      <svg class="legend-swatch" width="30" height="38" viewBox="0 0 30 38" style="display:block;">
+        <defs>
+          <pattern id="hatch-legend" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="5" stroke="rgba(184,64,64,0.35)" stroke-width="1.5"/>
+          </pattern>
+        </defs>
+        <!-- Green within block -->
+        <rect x="3" y="20" width="24" height="14" fill="rgba(74,124,116,0.18)" stroke="rgba(74,124,116,0.35)" stroke-width="0.5"/>
+        <!-- Red out block -->
+        <rect x="3" y="10" width="24" height="10" fill="rgba(184,64,64,0.22)"/>
+        <rect x="3" y="10" width="24" height="10" fill="url(#hatch-legend)"/>
+        <!-- Outline -->
+        <rect x="3" y="10" width="24" height="24" fill="none" stroke="rgba(59,107,138,0.3)" stroke-width="1"/>
+        <!-- Roof -->
+        <polygon points="15,2 0,10 30,10" fill="#8B9EB0" opacity="0.88"/>
+      </svg>
+      <span>House height = monthly<br>mortgage payment</span>
+    </div>
+
+    <div class="legend-item">
+      <svg class="legend-swatch" width="18" height="14" viewBox="0 0 18 14" style="display:block;">
+        <rect x="0" y="0" width="18" height="14" fill="rgba(74,124,116,0.13)" stroke="rgba(74,124,116,0.3)" stroke-width="0.5" rx="1"/>
+      </svg>
+      <span>Payment within reach<br>(28% rule)</span>
+    </div>
+
+    <div class="legend-item">
+      <svg class="legend-swatch" width="18" height="14" viewBox="0 0 18 14" style="display:block;">
+        <defs>
+          <pattern id="hatch-legend2" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="5" stroke="rgba(184,64,64,0.4)" stroke-width="1.5"/>
+          </pattern>
+        </defs>
+        <rect x="0" y="0" width="18" height="14" fill="rgba(184,64,64,0.22)" rx="1"/>
+        <rect x="0" y="0" width="18" height="14" fill="url(#hatch-legend2)" rx="1"/>
+      </svg>
+      <span>Payment out of reach</span>
+    </div>
+
+    <div class="legend-item">
+      <svg class="legend-swatch" width="36" height="10" viewBox="0 0 36 10" style="display:block;">
+        <defs>
+          <linearGradient id="roof-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#B8CEDD"/>
+            <stop offset="50%" stop-color="#8B9EB0"/>
+            <stop offset="100%" stop-color="#7A3B22"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="2" width="36" height="6" fill="url(#roof-grad)" rx="2"/>
+      </svg>
+      <span>Roof color = mortgage rate<br>(cool=low, warm=high)<br><em style="font-style:italic;color:#A09C97">roof height is decorative only</em></span>
+    </div>
+
+    <div class="legend-item">
+      <svg class="legend-swatch" width="32" height="12" viewBox="0 0 32 12" style="display:block;">
+        <line x1="0" y1="6" x2="32" y2="6" stroke="#C17D3C" stroke-width="2" stroke-dasharray="5,3" opacity="0.9"/>
+      </svg>
+      <span>What a household can afford<br>(28% of income ÷ 12)</span>
+    </div>
+
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-wrap">
+    <svg id="chart" viewBox="0 0 1160 590" style="width:100%;height:auto;display:block;"></svg>
+  </div>
+
+  <div class="note">
+    <strong>How to read:</strong> House height encodes the estimated monthly mortgage payment for Boston's median home (20% down, 30-year fixed). The green lower block is the share of payment supportable under the 28% housing-cost rule — the red upper block is the monthly overage. Roof shade signals mortgage rates: cool slate = near-historic lows (2021: 2.96%), warm brick = elevated rates (2023: 6.81%). Income data for 2020 is unavailable (ACS gap); that point is linearly interpolated. Sources: Redfin Data Center, Census ACS, Freddie Mac PMMS.
+  </div>
+
+</div>
+
+<div id="tooltip"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+const RAW = [
+  {year:2005, price:385000,  rate:5.867, mortgage:1820, income:44500},
+  {year:2006, price:390000,  rate:6.413, mortgage:1954, income:47100},
+  {year:2007, price:380000,  rate:6.337, mortgage:1889, income:49400},
+  {year:2008, price:350000,  rate:6.027, mortgage:1684, income:51200},
+  {year:2009, price:375000,  rate:5.037, mortgage:1617, income:49900},
+  {year:2010, price:360000,  rate:4.690, mortgage:1492, income:51000},
+  {year:2011, price:345000,  rate:4.448, mortgage:1390, income:52000},
+  {year:2012, price:391333,  rate:3.657, mortgage:1433, income:53400},
+  {year:2013, price:429917,  rate:3.976, mortgage:1637, income:55400},
+  {year:2014, price:475333,  rate:4.169, mortgage:1853, income:57300},
+  {year:2015, price:519500,  rate:3.851, mortgage:1949, income:59400},
+  {year:2016, price:565583,  rate:3.654, mortgage:2071, income:62000},
+  {year:2017, price:610667,  rate:3.990, mortgage:2330, income:65100},
+  {year:2018, price:663500,  rate:4.545, mortgage:2704, income:68700},
+  {year:2019, price:670917,  rate:3.936, mortgage:2543, income:71834},
+  {year:2020, price:687833,  rate:3.112, mortgage:2353, income:null},
+  {year:2021, price:728583,  rate:2.958, mortgage:2444, income:76000},
+  {year:2022, price:760417,  rate:5.344, mortgage:3395, income:80300},
+  {year:2023, price:786083,  rate:6.807, mortgage:4103, income:94755},
+  {year:2024, price:809333,  rate:6.721, mortgage:4187, income:97344},
+];
+
+// Derive fields
+const data = RAW.map(d => {
+  const incomeInterpolated = d.income === null;
+  const income = incomeInterpolated ? (71834 + 76000) / 2 : d.income;
+  const incomeMonthly = income / 12;
+  const affordable = income * 0.28 / 12;
+  const gap = Math.max(d.mortgage - affordable, 0);
+  const within = Math.min(affordable, d.mortgage);
+  return { ...d, income, incomeMonthly, incomeInterpolated, affordable, gap, within };
+});
+
+// ── Dimensions ────────────────────────────────────────────────────────────────
+const SVG_W = 1160, SVG_H = 590;
+const margin = { top: 100, right: 90, bottom: 65, left: 86 };
+const W = 984, H = 425;
+const HOUSE_W = 36;
+
+// ── Scales ────────────────────────────────────────────────────────────────────
+const xScale  = d3.scaleLinear().domain([2004.5, 2024.5]).range([0, W]);
+const yScale  = d3.scaleLinear().domain([0, 9000]).range([H, 0]);
+const rateColor = d3.scaleLinear()
+  .domain([2.9, 4.5, 6.9])
+  .range(['#B8CEDD', '#8B9EB0', '#7A3B22'])
+  .clamp(true);
+
+const halfStep = W / (2 * 19);
+
+// ── SVG setup ─────────────────────────────────────────────────────────────────
+const svg = d3.select('#chart');
+
+// Defs
+const defs = svg.append('defs');
+
+// Hatch pattern
+const hatch = defs.append('pattern')
+  .attr('id', 'hatch-red')
+  .attr('patternUnits', 'userSpaceOnUse')
+  .attr('width', 5)
+  .attr('height', 5)
+  .attr('patternTransform', 'rotate(45)');
+hatch.append('line')
+  .attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', 5)
+  .attr('stroke', 'rgba(184,64,64,0.25)')
+  .attr('stroke-width', 1.5);
+
+// Clip path for plot area
+defs.append('clipPath')
+  .attr('id', 'plot-clip')
+  .append('rect')
+  .attr('x', 0).attr('y', -margin.top)
+  .attr('width', W).attr('height', H + margin.top);
+
+// Main plot group
+const g = svg.append('g')
+  .attr('transform', `translate(${margin.left},${margin.top})`);
+
+// ── Era bands ─────────────────────────────────────────────────────────────────
+const eras = [
+  { start: 2005, end: 2012, fill: 'rgba(180,158,138,0.10)', label: 'Post-crash reset',     labelColor: '#8A7A6A' },
+  { start: 2013, end: 2021, fill: 'rgba(74,124,116,0.09)',  label: 'Price surge · low rates', labelColor: '#4A7C74' },
+  { start: 2022, end: 2024, fill: 'rgba(139,74,74,0.12)',   label: 'Rate shock',            labelColor: '#8B4A4A' },
+];
+
+const eraG = g.append('g').attr('class', 'era-bands');
+
+eras.forEach(era => {
+  const x1 = xScale(era.start) - halfStep;
+  const x2 = xScale(era.end)   + halfStep;
+  eraG.append('rect')
+    .attr('x', x1).attr('y', 0)
+    .attr('width', x2 - x1).attr('height', H)
+    .attr('fill', era.fill);
+
+  eraG.append('text')
+    .attr('x', (x1 + x2) / 2)
+    .attr('y', -12)
+    .attr('text-anchor', 'middle')
+    .attr('font-family', 'Lato, sans-serif')
+    .attr('font-size', 10)
+    .attr('fill', era.labelColor)
+    .attr('opacity', 0.85)
+    .text(era.label);
+});
+
+// ── Gridlines ─────────────────────────────────────────────────────────────────
+const gridG = g.append('g').attr('class', 'gridlines');
+[1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000].forEach(val => {
+  gridG.append('line')
+    .attr('x1', 0).attr('x2', W)
+    .attr('y1', yScale(val)).attr('y2', yScale(val))
+    .attr('stroke', '#E5E0D9')
+    .attr('stroke-width', 1)
+    .attr('stroke-dasharray', '2,4');
+});
+
+// ── Houses ────────────────────────────────────────────────────────────────────
+const housesG = g.append('g').attr('class', 'houses').attr('clip-path', 'url(#plot-clip)');
+
+const tooltip = d3.select('#tooltip');
+
+data.forEach(d => {
+  const cx = xScale(d.year);
+  const yTop = yScale(d.mortgage);
+  const yWithin = yScale(d.within);
+  const houseG = housesG.append('g').attr('class', 'house');
+
+  // Within-reach block (green)
+  houseG.append('rect')
+    .attr('x', cx - HOUSE_W/2)
+    .attr('y', yWithin)
+    .attr('width', HOUSE_W)
+    .attr('height', H - yWithin)
+    .attr('fill', 'rgba(74,124,116,0.20)')
+    .attr('stroke', 'rgba(74,124,116,0.45)')
+    .attr('stroke-width', 1);
+
+  // Out-of-reach block (red fill)
+  if (d.gap > 0) {
+    houseG.append('rect')
+      .attr('x', cx - HOUSE_W/2)
+      .attr('y', yTop)
+      .attr('width', HOUSE_W)
+      .attr('height', yWithin - yTop)
+      .attr('fill', 'rgba(184,64,64,0.17)');
+
+    // Out-of-reach hatch overlay
+    houseG.append('rect')
+      .attr('x', cx - HOUSE_W/2)
+      .attr('y', yTop)
+      .attr('width', HOUSE_W)
+      .attr('height', yWithin - yTop)
+      .attr('fill', 'url(#hatch-red)');
+  }
+
+  // House outline
+  houseG.append('rect')
+    .attr('x', cx - HOUSE_W/2)
+    .attr('y', yTop)
+    .attr('width', HOUSE_W)
+    .attr('height', H - yTop)
+    .attr('fill', 'none')
+    .attr('stroke', 'rgba(59,107,138,0.22)')
+    .attr('stroke-width', 1);
+
+  // Roof (decorative, fixed 24px height)
+  const roofH = 24;
+  const overhang = 5;
+  houseG.append('polygon')
+    .attr('points', `${cx},${yTop - roofH} ${cx - HOUSE_W/2 - overhang},${yTop} ${cx + HOUSE_W/2 + overhang},${yTop}`)
+    .attr('fill', rateColor(d.rate))
+    .attr('opacity', 0.88);
+
+  // Hit target (invisible, for tooltip)
+  houseG.append('rect')
+    .attr('x', cx - HOUSE_W/2 - overhang)
+    .attr('y', yTop - roofH)
+    .attr('width', HOUSE_W + overhang * 2)
+    .attr('height', H - yTop + roofH)
+    .attr('fill', 'transparent')
+    .attr('cursor', 'pointer')
+    .on('mousemove', function(event) {
+      const gapStr = d.gap > 0
+        ? `$${Math.round(d.gap).toLocaleString()}/mo`
+        : '—';
+      const incomeStr = d.incomeInterpolated
+        ? `$${d.income.toLocaleString()}/yr (est.)`
+        : `$${d.income.toLocaleString()}/yr`;
+
+      tooltip
+        .style('opacity', 1)
+        .style('left', (event.clientX + 16) + 'px')
+        .style('top',  (event.clientY - 10) + 'px')
+        .html(`
+          <div class="tt-year">${d.year}</div>
+          <div class="tt-price">$${Math.round(d.price).toLocaleString()} median sale price</div>
+          <div class="tt-row"><span class="tt-label">Mortgage rate</span><span class="tt-val">${d.rate.toFixed(2)}%</span></div>
+          <div class="tt-row"><span class="tt-label">Monthly payment</span><span class="tt-val">$${d.mortgage.toLocaleString()}/mo</span></div>
+          <div class="tt-row"><span class="tt-label">Monthly income</span><span class="tt-val">$${Math.round(d.incomeMonthly).toLocaleString()}/mo</span></div>
+          <div class="tt-row"><span class="tt-label">Annual income</span><span class="tt-val">${incomeStr}</span></div>
+          <div class="tt-row"><span class="tt-label">28% limit</span><span class="tt-val">$${Math.round(d.affordable).toLocaleString()}/mo</span></div>
+          <div class="tt-row"><span class="tt-label">Out of reach</span><span class="tt-val ${d.gap > 0 ? 'red' : ''}">${gapStr}</span></div>
+        `);
+    })
+    .on('mouseleave', function() {
+      tooltip.style('opacity', 0);
+    });
+});
+
+// ── Annotations ───────────────────────────────────────────────────────────────
+// 1. 2011 — "Closest to affordable ever"
+const d2011 = data.find(d => d.year === 2011);
+const cx2011 = xScale(2011);
+const yTop2011 = yScale(d2011.mortgage);
+g.append('line')
+  .attr('x1', cx2011).attr('y1', yTop2011 - 24 - 6)
+  .attr('x2', cx2011).attr('y2', yTop2011 - 24 - 22)
+  .attr('stroke', '#A09C97').attr('stroke-width', 1);
+g.append('text')
+  .attr('x', cx2011)
+  .attr('y', yTop2011 - 24 - 26)
+  .attr('text-anchor', 'middle')
+  .attr('font-family', 'Lato, sans-serif')
+  .attr('font-size', 9)
+  .attr('fill', '#6B8A6A')
+  .text('Closest to');
+g.append('text')
+  .attr('x', cx2011)
+  .attr('y', yTop2011 - 24 - 17)
+  .attr('text-anchor', 'middle')
+  .attr('font-family', 'Lato, sans-serif')
+  .attr('font-size', 9)
+  .attr('fill', '#6B8A6A')
+  .text('affordable ever');
+
+// 2. 2022 — "↑ rate shock"
+const d2022 = data.find(d => d.year === 2022);
+const cx2022 = xScale(2022);
+const yTop2022 = yScale(d2022.mortgage);
+g.append('text')
+  .attr('x', cx2022)
+  .attr('y', yTop2022 - 24 - 6)
+  .attr('text-anchor', 'middle')
+  .attr('font-family', 'Lato, sans-serif')
+  .attr('font-size', 9.5)
+  .attr('fill', '#8B4A4A')
+  .text('↑ rate shock');
+
+// 3. 2024 — gap amount
+const d2024 = data.find(d => d.year === 2024);
+const cx2024 = xScale(2024);
+const yGapTop = yScale(d2024.mortgage);
+const yGapBot = yScale(d2024.affordable);
+const blockH = yGapBot - yGapTop;
+const gapAmt = Math.round(d2024.gap);
+
+if (blockH > 30) {
+  // Rotated text centered in out-of-reach block
+  g.append('text')
+    .attr('x', cx2024)
+    .attr('y', (yGapTop + yGapBot) / 2)
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'middle')
+    .attr('transform', `rotate(-90, ${cx2024}, ${(yGapTop + yGapBot) / 2})`)
+    .attr('font-family', 'Lato, sans-serif')
+    .attr('font-size', 9)
+    .attr('fill', '#8B4A4A')
+    .attr('font-weight', '500')
+    .text(`−$${gapAmt.toLocaleString()}/mo`);
+} else {
+  // Place to the left if block is too small
+  g.append('text')
+    .attr('x', cx2024 - HOUSE_W/2 - 4)
+    .attr('y', (yGapTop + yGapBot) / 2)
+    .attr('text-anchor', 'end')
+    .attr('dominant-baseline', 'middle')
+    .attr('font-family', 'Lato, sans-serif')
+    .attr('font-size', 9)
+    .attr('fill', '#8B4A4A')
+    .text(`−$${gapAmt.toLocaleString()}/mo`);
+}
+
+// ── Affordability line ────────────────────────────────────────────────────────
+const affordLine = d3.line()
+  .defined(d => d.affordable != null)
+  .x(d => xScale(d.year))
+  .y(d => yScale(d.affordable));
+
+g.append('path')
+  .datum(data)
+  .attr('fill', 'none')
+  .attr('stroke', '#C17D3C')
+  .attr('stroke-width', 2.5)
+  .attr('stroke-dasharray', '6,3')
+  .attr('opacity', 1.0)
+  .attr('d', affordLine);
+
+// ── Line labels ───────────────────────────────────────────────────────────────
+const lastD = data[data.length - 1];
+const labelX = W + 10;
+
+const affordLabel = g.append('text')
+  .attr('x', labelX)
+  .attr('y', yScale(lastD.affordable) - 20)
+  .attr('font-family', 'Lato, sans-serif')
+  .attr('font-size', 9)
+  .attr('fill', '#C17D3C');
+['What a typical', 'Boston household', 'can afford', '(28% of income)'].forEach((line, i) => {
+  affordLabel.append('tspan')
+    .attr('x', labelX)
+    .attr('dy', i === 0 ? 0 : '1.25em')
+    .text(line);
+});
+
+// Mid-chart annotation: what the affordability line means
+const annotYear = 2014;
+const annotX = xScale(annotYear);
+const annotD = data.find(d => d.year === annotYear);
+const annotY = yScale(annotD.affordable) + 14;
+g.append('text')
+  .attr('x', annotX)
+  .attr('y', annotY)
+  .attr('text-anchor', 'middle')
+  .attr('font-family', 'DM Sans, sans-serif')
+  .attr('font-size', 9)
+  .attr('font-style', 'italic')
+  .attr('fill', '#C17D3C')
+  .attr('opacity', 0.72)
+  .text('← ceiling: max payment a typical household can carry');
+
+// ── Y axis (single, monthly) ──────────────────────────────────────────────────
+const axisLeft = d3.axisLeft(yScale)
+  .tickValues([1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000])
+  .tickFormat(d => '$' + d.toLocaleString() + '/mo')
+  .tickSize(0);
+
+const leftAxisG = g.append('g')
+  .attr('class', 'axis axis-left')
+  .call(axisLeft);
+
+leftAxisG.select('.domain').remove();
+leftAxisG.selectAll('text')
+  .attr('dx', '-8')
+  .attr('font-family', 'Lato, sans-serif')
+  .attr('font-size', 10)
+  .attr('fill', '#A09C97');
+
+// Y axis label
+g.append('text')
+  .attr('transform', 'rotate(-90)')
+  .attr('x', -H / 2)
+  .attr('y', -margin.left + 14)
+  .attr('text-anchor', 'middle')
+  .attr('font-family', 'Lato, sans-serif')
+  .attr('font-size', 10)
+  .attr('fill', '#A09C97')
+  .text('Monthly ($/mo)');
+
+// ── X axis ────────────────────────────────────────────────────────────────────
+const xTickYears = [2005, 2008, 2012, 2015, 2019, 2022, 2024];
+const xAxisG = g.append('g').attr('class', 'axis axis-x');
+
+xTickYears.forEach(yr => {
+  const x = xScale(yr);
+  // Tick mark
+  xAxisG.append('line')
+    .attr('x1', x).attr('x2', x)
+    .attr('y1', H).attr('y2', H + 5)
+    .attr('stroke', '#A09C97').attr('stroke-width', 1);
+  // Year label
+  xAxisG.append('text')
+    .attr('x', x)
+    .attr('y', H + 17)
+    .attr('text-anchor', 'middle')
+    .attr('font-family', 'Lato, sans-serif')
+    .attr('font-size', 10)
+    .attr('fill', '#A09C97')
+    .text(yr);
+});
+
+// Baseline
+g.append('line')
+  .attr('x1', 0).attr('x2', W)
+  .attr('y1', H).attr('y2', H)
+  .attr('stroke', '#D5CFC8').attr('stroke-width', 1);
+
+</script>
+</body>
+</html>

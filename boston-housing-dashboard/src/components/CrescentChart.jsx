@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 
-const W = 1080
+const W = 1200
 const H = 820
-const PAD = { top: 70, right: 30, bottom: 80, left: 60 }
-const CW = W - PAD.left - PAD.right
-const CH = H - PAD.top - PAD.bottom
+const PAD = { top: 70, right: 50, bottom: 80, left: 70 }
+const CW = W - PAD.left - PAD.right   // 1080
+const CH = H - PAD.top - PAD.bottom   // 670
 const MIN_YEAR = 1980
 const MAX_YEAR = 2024
-const YEAR_RANGE = MAX_YEAR - MIN_YEAR
+// Half-year buffer on each side keeps edge circles away from the clip boundary
+const X_MIN  = MIN_YEAR - 0.5          // 1979.5
+const X_SPAN = (MAX_YEAR + 0.5) - X_MIN // 45
 const SCALE = 0.38
 const ZOOM_REVEAL = 2.0
 
@@ -40,10 +42,10 @@ const CONTEXT_EVENTS = {
 }
 
 const Y_GRID = [1000, 2000, 3000, 4000, 5000]
-const X_TICKS = [1980, 1990, 2000, 2010, 2020, 2024]
+const X_TICKS = [1980, 1990, 2000, 2010, 2020]
 
 function xScale(year) {
-  return PAD.left + ((year - MIN_YEAR) / YEAR_RANGE) * CW
+  return PAD.left + ((year - X_MIN) / X_SPAN) * CW
 }
 
 function buildYScale(maxTot) {
@@ -54,11 +56,11 @@ function buildTooltipHTML(d, demandByYear, showDemand, contextEvent) {
   const dem = demandByYear[d.year]
   let html = `<div class="tt-year">${d.year}</div>
     <div class="tt-val">${d.tot.toLocaleString()} total units</div>
-    <div class="tt-sub">${d.mf.toLocaleString()} MF · ${d.sf} SF${d.bldgs != null ? ` · ${d.bldgs} bldgs` : ''}</div>`
+    <div class="tt-sub">${d.mf.toLocaleString()} multi-family · ${d.sf} single-family${d.bldgs != null ? ` · ${d.bldgs} bldgs` : ''}</div>`
   if (dem?.hh_new && showDemand) {
     const diff = d.tot - dem.hh_new
     const cls  = diff >= 0 ? 'tt-surplus' : 'tt-gap'
-    html += `<div class="tt-delta ${cls}">${diff >= 0 ? '↑ ' : '↓ '}${Math.abs(diff).toLocaleString()} vs. demand (${dem.hh_new.toLocaleString()} new HH)</div>`
+    html += `<div class="tt-delta ${cls}">${diff >= 0 ? '↑ ' : '↓ '}${Math.abs(diff).toLocaleString()} vs. demand (${dem.hh_new.toLocaleString()} new households)</div>`
   }
   if (contextEvent) {
     html += `<div class="tt-context-title">${contextEvent.title}</div><div class="tt-context-text">${contextEvent.text}</div>`
@@ -78,6 +80,20 @@ function buildDemandTooltipHTML(d, supplyByYear) {
   return html
 }
 
+// Clamp pan so data area always overlaps the visible plot window
+function clampTransform(scale, tx, ty) {
+  if (scale <= 1) return { scale: 1, tx: 0, ty: 0 }
+  const minTx = PAD.left - scale * (PAD.left + CW)
+  const maxTx = PAD.left * (1 - scale) + CW
+  const minTy = PAD.top  - scale * (PAD.top  + CH)
+  const maxTy = PAD.top  * (1 - scale) + CH
+  return {
+    scale,
+    tx: Math.min(maxTx, Math.max(minTx, tx)),
+    ty: Math.min(maxTy, Math.max(minTy, ty)),
+  }
+}
+
 export default function CrescentChart({
   permitData,
   demandData,
@@ -86,21 +102,18 @@ export default function CrescentChart({
   onToggleDemand,
   onTooltip,
 }) {
-  const [view, setView] = useState({ zoom: 1, vbX: 0, vbY: 0 })
+  const [transform, setTransform] = useState({ scale: 1, tx: 0, ty: 0 })
   const [dragging, setDragging] = useState(false)
   const [hoveredContext, setHoveredContext] = useState(null)
-  const svgRef   = useRef(null)
-  const dragRef  = useRef(null)
+  const svgRef  = useRef(null)
+  const dragRef = useRef(null)
 
   const cleanData = permitData.filter(d => !d.gap && d.tot > 0)
   const maxTot    = Math.max(...cleanData.map(d => d.tot))
   const yScale    = buildYScale(maxTot)
-  const isZoomedIn = view.zoom >= ZOOM_REVEAL
-
   const supplyByYear = {}
   cleanData.forEach(d => { supplyByYear[d.year] = d.tot })
 
-  // Gap groups for hatched shading
   const gapGroups = []
   let gapStart = null
   for (let yr = MIN_YEAR; yr <= MAX_YEAR; yr++) {
@@ -119,30 +132,29 @@ export default function CrescentChart({
     if (b.year - a.year > 1) connectors.push([a, b])
   }
 
-  // SVG-coordinate mouse position helper
   function svgPoint(e) {
     const svg = svgRef.current
     if (!svg) return { x: 0, y: 0 }
     const pt = svg.createSVGPoint()
     pt.x = e.clientX
     pt.y = e.clientY
-    const p = pt.matrixTransform(svg.getScreenCTM().inverse())
-    return { x: p.x, y: p.y }
+    return pt.matrixTransform(svg.getScreenCTM().inverse())
   }
 
-  // Wheel zoom — attached imperatively so we can use { passive: false }
+  // Wheel zoom — pan+scale on data layer only; axes never affected
   const handleWheel = useCallback((e) => {
     e.preventDefault()
     const { x: mx, y: my } = svgPoint(e)
     const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15
-    setView(prev => {
-      const newZoom = Math.max(1, Math.min(8, prev.zoom * factor))
-      if (newZoom === 1) return { zoom: 1, vbX: 0, vbY: 0 }
-      return {
-        zoom: newZoom,
-        vbX: mx - (mx - prev.vbX) * prev.zoom / newZoom,
-        vbY: my - (my - prev.vbY) * prev.zoom / newZoom,
-      }
+    setTransform(prev => {
+      const newScale = Math.max(1, Math.min(8, prev.scale * factor))
+      if (newScale === 1) return { scale: 1, tx: 0, ty: 0 }
+      const f = newScale / prev.scale
+      return clampTransform(
+        newScale,
+        mx - (mx - prev.tx) * f,
+        my - (my - prev.ty) * f,
+      )
     })
   }, [])
 
@@ -153,27 +165,23 @@ export default function CrescentChart({
     return () => el.removeEventListener('wheel', handleWheel)
   }, [handleWheel])
 
-  // Drag to pan
   const handleMouseDown = (e) => {
-    if (view.zoom <= 1) return
+    if (transform.scale <= 1) return
     e.preventDefault()
     setDragging(true)
-    dragRef.current = { clientX: e.clientX, clientY: e.clientY, vbX: view.vbX, vbY: view.vbY }
+    dragRef.current = { clientX: e.clientX, clientY: e.clientY, tx: transform.tx, ty: transform.ty }
   }
 
   const handleMouseMove = (e) => {
     onTooltip(prev => ({ ...prev, x: e.clientX, y: e.clientY }))
     if (dragging && dragRef.current && svgRef.current) {
       const rect = svgRef.current.getBoundingClientRect()
-      const vbW = W / view.zoom
-      const vbH = H / view.zoom
-      const dx = (e.clientX - dragRef.current.clientX) / rect.width  * vbW
-      const dy = (e.clientY - dragRef.current.clientY) / rect.height * vbH
-      setView(prev => ({
-        ...prev,
-        vbX: dragRef.current.vbX - dx,
-        vbY: dragRef.current.vbY - dy,
-      }))
+      const dx = (e.clientX - dragRef.current.clientX) / rect.width  * W
+      const dy = (e.clientY - dragRef.current.clientY) / rect.height * H
+      // Capture tx/ty before the callback to avoid null-ref if dragRef is cleared first
+      const newTx = dragRef.current.tx + dx
+      const newTy = dragRef.current.ty + dy
+      setTransform(prev => clampTransform(prev.scale, newTx, newTy))
     }
   }
 
@@ -183,8 +191,9 @@ export default function CrescentChart({
   }
 
   const handleCrescentEnter = (e, d) => {
-    const contextEvent = isZoomedIn ? CONTEXT_EVENTS[d.year] : null
-    setHoveredContext(isZoomedIn && CONTEXT_EVENTS[d.year] ? d.year : null)
+    // Always show context annotation if available — rings signal this to the user
+    const contextEvent = CONTEXT_EVENTS[d.year] ?? null
+    setHoveredContext(contextEvent ? d.year : null)
     onTooltip({ visible: true, x: e.clientX, y: e.clientY, content: buildTooltipHTML(d, demandByYear, showDemand, contextEvent) })
   }
 
@@ -197,43 +206,45 @@ export default function CrescentChart({
     setHoveredContext(null)
   }
 
-  const resetZoom = () => setView({ zoom: 1, vbX: 0, vbY: 0 })
-
-  const baseline2019 = permitData.find(d => d.year === 2019)
-  const vbW = W / view.zoom
-  const vbH = H / view.zoom
+  const resetZoom = () => setTransform({ scale: 1, tx: 0, ty: 0 })
 
   return (
     <>
-      {/* Controls */}
-      <div className="chart-controls">
-        <div className="legend">
-          <div className="legend-item">
-            <div className="legend-crescent" />
-            <span>MF units (crescent body)</span>
-          </div>
-          <div className="legend-item">
-            <div className="legend-void" />
-            <span>SF units (carved void)</span>
-          </div>
-          <div className="legend-item">
-            <div className="legend-swatch" style={{ background: 'var(--demand-color)' }} />
-            <span>Household demand</span>
-          </div>
-          <div className="legend-item">
-            <div className="legend-swatch" style={{ background: 'var(--gap-color)', opacity: 0.6 }} />
-            <span>Supply gap</span>
-          </div>
-          <div className="legend-item">
-            <div className="legend-swatch" style={{ background: 'var(--surplus-color)', opacity: 0.6 }} />
-            <span>Supply surplus</span>
-          </div>
+      {/* Legend */}
+      <div className="legend" style={{ marginBottom: 12 }}>
+        <div className="legend-item">
+          <div className="legend-crescent" />
+          <span>Multi-family units (crescent body)</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          {view.zoom > 1 && (
+        <div className="legend-item">
+          <div className="legend-void" />
+          <span>Single-family units (carved void)</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-swatch" style={{ background: 'var(--demand-color)' }} />
+          <span>Household demand</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-swatch" style={{ background: 'var(--gap-color)', opacity: 0.6 }} />
+          <span>Supply gap</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-swatch" style={{ background: 'var(--surplus-color)', opacity: 0.6 }} />
+          <span>Supply surplus</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-ring" />
+          <span>Notable event (hover)</span>
+        </div>
+      </div>
+
+      {/* Main SVG — viewBox is fixed; only the data layer transforms */}
+      <div className="chart-wrap">
+        {/* Controls overlay — anchored to top-right of chart */}
+        <div className="chart-controls-overlay">
+          {transform.scale > 1 && (
             <div className="zoom-controls">
-              <span className="zoom-level">{view.zoom.toFixed(1)}×</span>
-              {isZoomedIn && <span className="zoom-hint">hover ringed points for context</span>}
+              <span className="zoom-level">{transform.scale.toFixed(1)}×</span>
               <button className="zoom-reset" onClick={resetZoom}>Reset zoom</button>
             </div>
           )}
@@ -245,232 +256,245 @@ export default function CrescentChart({
             <span>Demand layer</span>
           </div>
         </div>
-      </div>
-
-      {/* Main SVG */}
-      <div className="chart-wrap">
         <svg
           ref={svgRef}
-          viewBox={`${view.vbX} ${view.vbY} ${vbW} ${vbH}`}
+          viewBox={`0 0 ${W} ${H}`}
           style={{
             width: '100%',
             height: 'auto',
             display: 'block',
-            cursor: view.zoom > 1 ? (dragging ? 'grabbing' : 'grab') : 'default',
+            cursor: transform.scale > 1 ? (dragging ? 'grabbing' : 'grab') : 'default',
           }}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={() => { handleLeave(); handleMouseUp() }}
         >
-          <defs />
+          <defs>
+            {/* Clip data layer to the plot area so it never bleeds into axis space */}
+            <clipPath id="crescent-plot-clip">
+              <rect x={PAD.left} y={PAD.top} width={CW} height={CH} />
+            </clipPath>
+          </defs>
 
-          {/* Era bands */}
+          {/* ── STATIC LAYER ─────────────────────────────────────────────────
+               Axes, grid lines, tick labels, era labels.
+               Never transformed — always fully visible regardless of zoom.
+          ─────────────────────────────────────────────────────────────────── */}
+
+          {/* Era labels (above chart) */}
           {ERAS.map(era => {
             const x1 = xScale(era.start - 0.4)
             const x2 = xScale(era.end   + 0.4)
             const c  = ERA_COLORS[era.color]
             const mx = (x1 + x2) / 2
             return (
-              <g key={era.start}>
-                <rect x={x1} y={PAD.top} width={x2 - x1} height={CH} fill={c.band} />
-                <text
-                  x={mx} y={PAD.top - 10}
-                  textAnchor="middle"
-                  fontSize="11"
-                  fontFamily="DM Mono, monospace"
-                  fill={c.label}
-                  opacity="0.85"
-                >
-                  {era.label}
-                </text>
-              </g>
+              <text
+                key={era.start}
+                x={mx} y={PAD.top - 10}
+                textAnchor="middle"
+                fontSize="11"
+                fontFamily="Lato, sans-serif"
+                fill={c.label}
+                opacity="0.85"
+              >
+                {era.label}
+              </text>
             )
           })}
 
-          {/* Y grid lines */}
+          {/* Y grid lines + tick labels */}
           {Y_GRID.map(v => {
             const y = yScale(v)
             return (
               <g key={v}>
                 <line x1={PAD.left} y1={y} x2={W - PAD.right} y2={y} stroke="#E5E0D9" strokeWidth="1" />
-                <text x={PAD.left - 6} y={y + 4} textAnchor="end" fontSize="11" fontFamily="DM Mono, monospace" fill="#C4BDB7">
+                <text x={PAD.left - 6} y={y + 4} textAnchor="end" fontSize="11" fontFamily="Lato, sans-serif" fill="#C4BDB7">
                   {v.toLocaleString()}
                 </text>
               </g>
             )
           })}
 
-          {/* Y-axis label */}
+          {/* Y-axis title */}
           <text
             x="16"
             y={PAD.top + CH / 2}
             textAnchor="middle"
             fontSize="11"
-            fontFamily="DM Sans, sans-serif"
+            fontFamily="Lato, sans-serif"
             fill="#A09C97"
             transform={`rotate(-90, 16, ${PAD.top + CH / 2})`}
           >
             Units permitted
           </text>
 
-          {/* Demand layer */}
-          {showDemand && (() => {
-            const demPoints = demandData.filter(d => d.hh_new > 0)
-            const pts = demPoints.map(d => `${xScale(d.year)},${yScale(d.hh_new)}`).join(' ')
-            const barW = (CW / YEAR_RANGE) * 0.6
-
-            return (
-              <g>
-                {demPoints
-                  .filter(d => supplyByYear[d.year])
-                  .map(d => {
-                    const supply = supplyByYear[d.year]
-                    const yTop   = yScale(Math.max(supply, d.hh_new))
-                    const yBot   = yScale(Math.min(supply, d.hh_new))
-                    const isGap  = supply < d.hh_new
-                    return (
-                      <rect
-                        key={d.year}
-                        x={xScale(d.year) - barW / 2}
-                        y={yTop}
-                        width={barW}
-                        height={yBot - yTop}
-                        fill={isGap ? 'rgba(184,64,64,0.18)' : 'rgba(74,124,116,0.18)'}
-                        rx="2"
-                      />
-                    )
-                  })
-                }
-                <polyline
-                  points={pts}
-                  fill="none"
-                  stroke="#C17D3C"
-                  strokeWidth="2"
-                  strokeDasharray="5,3"
-                  opacity="0.85"
-                />
-                {demPoints.map(d => (
-                  <circle
-                    key={d.year}
-                    cx={xScale(d.year)}
-                    cy={yScale(d.hh_new)}
-                    r="3.5"
-                    fill="#C17D3C"
-                    opacity="0.8"
-                    style={{ cursor: 'pointer' }}
-                    onMouseEnter={e => handleDemandEnter(e, d)}
-                    onMouseLeave={handleLeave}
-                  />
-                ))}
-                {demPoints.length > 0 && (
-                  <text
-                    x={W - PAD.right + 2}
-                    y={yScale(demPoints[demPoints.length - 1].hh_new)}
-                    fontSize="9"
-                    fontFamily="DM Mono, monospace"
-                    fill="#C17D3C"
-                    opacity="0.8"
-                  >
-                    demand
-                  </text>
-                )}
-              </g>
-            )
-          })()}
-
-
-          {/* Dashed connectors across gaps */}
-          {connectors.map(([a, b]) => (
-            <line
-              key={`${a.year}-${b.year}`}
-              x1={xScale(a.year)} y1={yScale(a.tot)}
-              x2={xScale(b.year)} y2={yScale(b.tot)}
-              stroke="#C4BDB7"
-              strokeWidth="1"
-              strokeDasharray="3,3"
-            />
-          ))}
-
-
-          {/* Crescents */}
-          {cleanData.map(d => {
-            const cx = xScale(d.year)
-            const cy = yScale(d.tot)
-            const R  = Math.sqrt(d.tot) * SCALE
-
-            const sfFrac  = d.sf / d.tot
-            const rawVoidR = R * Math.sqrt(sfFrac) * 1.3
-            const voidR   = Math.min(rawVoidR, R * 0.82)
-            const offset  = (R - voidR) * 0.55
-
-            const hasContext  = Boolean(CONTEXT_EVENTS[d.year])
-            const isHovered   = hoveredContext === d.year
-            const ringOpacity = isZoomedIn ? (isHovered ? 1 : 0.35) : 0
-            const ringR       = R + 10 / view.zoom
-            const ringStroke  = isHovered ? 2.5 / view.zoom : 1.5 / view.zoom
-            const ringDash    = isHovered ? '' : `${5 / view.zoom},${3 / view.zoom}`
-
-            return (
-              <g key={d.year}>
-                {/* Context ring — visible when zoomed in, bright on hover */}
-                {hasContext && (
-                  <circle
-                    cx={cx}
-                    cy={cy}
-                    r={ringR}
-                    fill="none"
-                    stroke="rgba(255,255,255,0.9)"
-                    strokeWidth={ringStroke}
-                    strokeDasharray={ringDash}
-                    opacity={ringOpacity}
-                    pointerEvents="none"
-                    style={{ transition: 'opacity 0.2s' }}
-                  />
-                )}
-                {/* Invisible hover target */}
-                <circle
-                  cx={cx} cy={cy} r={Math.max(R + 2, 6)}
-                  fill="transparent"
-                  style={{ cursor: 'pointer' }}
-                  onMouseEnter={e => handleCrescentEnter(e, d)}
-                  onMouseLeave={handleLeave}
-                />
-                {/* MF body */}
-                <circle cx={cx} cy={cy} r={R} fill="#3B6B8A" opacity="0.72" />
-                {/* SF void */}
-                {d.sf > 0 && R > 3 && (
-                  <circle
-                    cx={cx + offset}
-                    cy={cy - offset * 0.5}
-                    r={voidR}
-                    fill="#FFFFFF"
-                  />
-                )}
-              </g>
-            )
-          })}
-
           {/* X-axis ticks + labels */}
-          {X_TICKS.map(y => (
-            <g key={y}>
+          {X_TICKS.map(yr => (
+            <g key={yr}>
               <line
-                x1={xScale(y)} y1={PAD.top + CH}
-                x2={xScale(y)} y2={PAD.top + CH + 5}
+                x1={xScale(yr)} y1={PAD.top + CH}
+                x2={xScale(yr)} y2={PAD.top + CH + 5}
                 stroke="#D0CBC4"
                 strokeWidth="1"
               />
               <text
-                x={xScale(y)} y={PAD.top + CH + 18}
+                x={xScale(yr)} y={PAD.top + CH + 18}
                 textAnchor="middle"
                 fontSize="11"
-                fontFamily="DM Mono, monospace"
+                fontFamily="Lato, sans-serif"
                 fill="#A09C97"
               >
-                {y}
+                {yr}
               </text>
             </g>
           ))}
+
+          {/* ── DATA LAYER ───────────────────────────────────────────────────
+               Clipped to the plot area. The inner <g> carries the zoom
+               transform so only data elements pan/scale — axes are siblings
+               above and are never affected.
+          ─────────────────────────────────────────────────────────────────── */}
+          <g clipPath="url(#crescent-plot-clip)">
+            <g transform={`translate(${transform.tx}, ${transform.ty}) scale(${transform.scale})`}>
+
+              {/* Era bands — tall enough to fill clip area at any zoom/pan */}
+              {ERAS.map(era => {
+                const x1 = xScale(era.start - 0.4)
+                const x2 = xScale(era.end   + 0.4)
+                const c  = ERA_COLORS[era.color]
+                return (
+                  <rect
+                    key={era.start}
+                    x={x1} y={-H}
+                    width={x2 - x1} height={H * 4}
+                    fill={c.band}
+                  />
+                )
+              })}
+
+              {/* Demand layer */}
+              {showDemand && (() => {
+                const demPoints = demandData.filter(d => d.hh_new > 0)
+                const pts = demPoints.map(d => `${xScale(d.year)},${yScale(d.hh_new)}`).join(' ')
+                const barW = (CW / X_SPAN) * 0.6
+
+                return (
+                  <g>
+                    {demPoints
+                      .filter(d => supplyByYear[d.year])
+                      .map(d => {
+                        const supply = supplyByYear[d.year]
+                        const yTop   = yScale(Math.max(supply, d.hh_new))
+                        const yBot   = yScale(Math.min(supply, d.hh_new))
+                        const isGap  = supply < d.hh_new
+                        return (
+                          <rect
+                            key={d.year}
+                            x={xScale(d.year) - barW / 2}
+                            y={yTop}
+                            width={barW}
+                            height={yBot - yTop}
+                            fill={isGap ? 'rgba(184,64,64,0.18)' : 'rgba(74,124,116,0.18)'}
+                            rx="2"
+                          />
+                        )
+                      })
+                    }
+                    <polyline
+                      points={pts}
+                      fill="none"
+                      stroke="#C17D3C"
+                      strokeWidth="2"
+                      strokeDasharray="5,3"
+                      opacity="0.85"
+                    />
+                    {demPoints.map(d => (
+                      <circle
+                        key={d.year}
+                        cx={xScale(d.year)}
+                        cy={yScale(d.hh_new)}
+                        r="3.5"
+                        fill="#C17D3C"
+                        opacity="0.8"
+                        style={{ cursor: 'pointer' }}
+                        onMouseEnter={e => handleDemandEnter(e, d)}
+                        onMouseLeave={handleLeave}
+                      />
+                    ))}
+                  </g>
+                )
+              })()}
+
+              {/* Dashed connectors across gaps */}
+              {connectors.map(([a, b]) => (
+                <line
+                  key={`${a.year}-${b.year}`}
+                  x1={xScale(a.year)} y1={yScale(a.tot)}
+                  x2={xScale(b.year)} y2={yScale(b.tot)}
+                  stroke="#C4BDB7"
+                  strokeWidth="1"
+                  strokeDasharray="3,3"
+                />
+              ))}
+
+              {/* Crescents */}
+              {cleanData.map(d => {
+                const cx = xScale(d.year)
+                const cy = yScale(d.tot)
+                const R  = Math.sqrt(d.tot) * SCALE
+
+                const sfFrac   = d.sf / d.tot
+                const rawVoidR = R * Math.sqrt(sfFrac) * 1.3
+                const voidR    = Math.min(rawVoidR, R * 0.82)
+                const offset   = (R - voidR) * 0.55
+
+                const hasContext = Boolean(CONTEXT_EVENTS[d.year])
+                const isHovered  = hoveredContext === d.year
+                const ringR      = R + 5
+
+                return (
+                  <g key={d.year}>
+                    {/* Stroke ring around annotated points — signals interactivity.
+                        pointerEvents none so it never steals hover from the
+                        invisible hit target below. */}
+                    {hasContext && (
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={ringR}
+                        fill="none"
+                        stroke={`rgba(59,107,138,${isHovered ? 0.85 : 0.45})`}
+                        strokeWidth={isHovered ? 2 : 1.5}
+                        pointerEvents="none"
+                        className={isHovered ? undefined : 'context-ring'}
+                      />
+                    )}
+                    {/* Multi-family body */}
+                    <circle cx={cx} cy={cy} r={R} fill="#3B6B8A" opacity="0.72" />
+                    {/* Single-family void */}
+                    {d.sf > 0 && R > 3 && (
+                      <circle
+                        cx={cx + offset}
+                        cy={cy - offset * 0.5}
+                        r={voidR}
+                        fill="#FFFFFF"
+                      />
+                    )}
+                    {/* Invisible hit target — must be last so it's on top of the crescent */}
+                    <circle
+                      cx={cx} cy={cy} r={Math.max(R + 2, 6)}
+                      fill="transparent"
+                      style={{ cursor: 'pointer' }}
+                      onMouseEnter={e => handleCrescentEnter(e, d)}
+                      onMouseLeave={handleLeave}
+                    />
+                  </g>
+                )
+              })}
+
+            </g>
+          </g>
         </svg>
       </div>
     </>

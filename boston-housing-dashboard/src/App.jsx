@@ -15,6 +15,21 @@ export default function App() {
 
   return (
     <div className="page">
+      <iframe
+        src="/viz2.html"
+        title="The House That Income Can't Reach"
+        style={{
+          width: '100%',
+          height: '980px',
+          border: 'none',
+          display: 'block',
+          marginBottom: '56px',
+        }}
+        scrolling="no"
+      />
+
+      <hr className="div" style={{ marginTop: 0 }} />
+
       <Header />
 
       <SummaryStrip

@@ -1,7 +1,6 @@
 export default function Header() {
   return (
     <>
-      <div className="pillar-tag">Pillar 4 · Community &amp; Infrastructure · Housing Supply</div>
       <h1>
         Boston Housing Permits, 1980–2024
         <br />

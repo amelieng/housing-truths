@@ -15,7 +15,7 @@ function xScale(year) {
 function buildTooltipHTML(d) {
   const cls = d.ratio >= 100 ? 'tt-surplus' : 'tt-gap'
   return `<div class="tt-year">${d.year}</div>
-    <div class="tt-val">${Math.round(d.ratio)} units per 100 new HH</div>
+    <div class="tt-val">${Math.round(d.ratio)} units per 100 new households</div>
     <div class="tt-sub">${d.tot.toLocaleString()} permitted · ${d.hh_new.toLocaleString()} new households</div>
     <div class="tt-delta ${cls}">${d.ratio >= 100 ? '↑ surplus' : '↓ deficit'} vs. equilibrium</div>`
 }
@@ -62,7 +62,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
         x={PAD.left - 6} y={baseline + 4}
         textAnchor="end"
         fontSize="9"
-        fontFamily="DM Mono, monospace"
+        fontFamily="Lato, sans-serif"
         fill="#8B6B4A"
         opacity="0.7"
       >
@@ -80,7 +80,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
           y={yScale(v) + 4}
           textAnchor="end"
           fontSize="9"
-          fontFamily="DM Mono, monospace"
+          fontFamily="Lato, sans-serif"
           fill="#C4BDB7"
         >
           {v}
@@ -116,7 +116,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
                 y={labelY}
                 textAnchor="middle"
                 fontSize="8"
-                fontFamily="DM Mono, monospace"
+                fontFamily="Lato, sans-serif"
                 fill={isAbove ? '#4A7C74' : '#8B4A4A'}
               >
                 {Math.round(d.ratio)}
@@ -134,7 +134,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
           y={H - 4}
           textAnchor="middle"
           fontSize="9"
-          fontFamily="DM Mono, monospace"
+          fontFamily="Lato, sans-serif"
           fill="#A09C97"
         >
           {y}
@@ -146,7 +146,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
         x={xScale(MAX_YEAR) - 2} y={PAD.top + 2}
         textAnchor="end"
         fontSize="9"
-        fontFamily="DM Sans, sans-serif"
+        fontFamily="Lato, sans-serif"
         fill="#A09C97"
       >
         ↑ more built than needed
@@ -155,7 +155,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
         x={xScale(MAX_YEAR) - 2} y={H - PAD.bottom - 2}
         textAnchor="end"
         fontSize="9"
-        fontFamily="DM Sans, sans-serif"
+        fontFamily="Lato, sans-serif"
         fill="#A09C97"
       >
         ↓ more households than units
