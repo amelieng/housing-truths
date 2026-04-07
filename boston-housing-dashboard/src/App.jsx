@@ -5,6 +5,7 @@ import Tooltip from './components/Tooltip'
 import AffordabilityChart from '../../src/components/AffordabilityChart'
 import RenterGuess from './components/RenterGuess'
 import FirstTimeBuyer from './components/FirstTimeBuyer'
+import Conclusion from './components/Conclusion'
 
 const { permitData, demandData, demandByYear } = loadData()
 
@@ -54,6 +55,10 @@ export default function App() {
       </section>
 
       <Tooltip {...tooltip} />
+
+      {/* ── Section 5: Conclusion ── */}
+      <Conclusion />
+
     </div>
   )
 }

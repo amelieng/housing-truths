@@ -75,7 +75,7 @@ function buildBuildings(container) {
   const renterPct = document.createElement('p')
   renterPct.className = 'rg-building-pct'
   renterPct.style.color = '#8B4A4A'
-  renterPct.textContent = '68%'
+  renterPct.textContent = '65%'
   renterCol.appendChild(renterSvg)
   renterCol.appendChild(renterLbl)
   renterCol.appendChild(renterPct)
@@ -93,7 +93,7 @@ function buildBuildings(container) {
   const ownerPct = document.createElement('p')
   ownerPct.className = 'rg-building-pct'
   ownerPct.style.color = '#4A7C74'
-  ownerPct.textContent = '32%'
+  ownerPct.textContent = '35%'
   ownerCol.appendChild(ownerSvg)
   ownerCol.appendChild(ownerLbl)
   ownerCol.appendChild(ownerPct)
@@ -150,7 +150,7 @@ export default function RenterGuess() {
           ? 'You got it. 2 renters for every 1 homeowner.'
           : 'The real answer is 2 : 1 — you guessed ' + guessAtSubmit.current + ' : 1.',
         statColor: wasRight ? '#4A7C74' : '#8B4A4A',
-        sub: 'Boston is one of the most renter-heavy cities in America. 68% of residents rent — nearly double the national average of 36%.',
+        sub: 'Boston is one of the most renter-heavy cities in America. 65% of residents rent — nearly double the national average of 36%.',
       })
       if (buildingsWrapRef.current) {
         buildBuildings(buildingsWrapRef.current)
@@ -247,12 +247,17 @@ export default function RenterGuess() {
           </div>
           <p className="rg-reveal-sub">{revealText.sub}</p>
           <blockquote className="rg-reveal-quote">
-            Two in three Bostonians are building someone else's wealth, not their own.
+            Nearly two in three Bostonians are building someone else's wealth, not their own.
           </blockquote>
         </div>
 
         {/* Buildings — DOM-manipulated via ref */}
         <div className="rg-buildings-wrap" ref={buildingsWrapRef} />
+
+        {/* Source attribution */}
+        <p className="rg-source">
+          Source: Boston Mayor's Office of Housing, 2022 Housing Conditions Report · ACS 2016–2020 5-year estimates
+        </p>
 
         {/* City comparison */}
         <div
@@ -272,12 +277,12 @@ export default function RenterGuess() {
             <div className="rg-compare-item">
               <p className="rg-compare-name">Boston</p>
               <div className="rg-compare-bar-wrap">
-                <div className="rg-bar-renter" style={{ height: compareBarsAnimated ? '54px' : '0px' }} />
-                <div className="rg-bar-owner"  style={{ height: compareBarsAnimated ? '26px' : '0px' }} />
+                <div className="rg-bar-renter" style={{ height: compareBarsAnimated ? '52px' : '0px' }} />
+                <div className="rg-bar-owner"  style={{ height: compareBarsAnimated ? '28px' : '0px' }} />
               </div>
               <p className="rg-compare-pcts">
-                <span style={{ color: '#8B4A4A' }}>68%</span> rent<br />
-                <span style={{ color: '#4A7C74' }}>32%</span> own
+                <span style={{ color: '#8B4A4A' }}>65%</span> rent<br />
+                <span style={{ color: '#4A7C74' }}>35%</span> own
               </p>
             </div>
 
