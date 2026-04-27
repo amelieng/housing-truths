@@ -75,7 +75,9 @@ export default function FirstTimeBuyer() {
           <p className="ftb-hero-yr">2025</p>
           <div className="ftb-hero-age">40</div>
           <p className="ftb-hero-age-lbl">median age at first purchase</p>
-          <p className="ftb-hero-share">21% of all first-time buyers</p>
+          <p className="ftb-hero-share">In 1992, the typical first-time buyer was 28. Today they're 40.</p>
+          <p style={{ fontFamily: 'Lato, sans-serif', fontSize: '13px', color: 'var(--text-source)', marginTop: '8px', lineHeight: '1.5' }}>A 12-year delay — in a single generation.</p>
+          <p style={{ fontFamily: 'Lato, sans-serif', fontSize: '13px', color: 'var(--text-source)', opacity: 0.65, marginTop: '6px', lineHeight: '1.4' }}>NAR Profile of Home Buyers and Sellers, 2025 · National data</p>
         </div>
 
       </div>
@@ -110,7 +112,7 @@ export default function FirstTimeBuyer() {
           <text
             x={200} y={189}
             textAnchor="middle"
-            fontFamily="Lato, sans-serif" fontSize="8" fill="#6B6460"
+            fontFamily="Lato, sans-serif" fontSize="13" fill="#6B6460"
           >
             1981 baseline
           </text>
@@ -123,7 +125,7 @@ export default function FirstTimeBuyer() {
           <text
             x={280} y={174}
             textAnchor="middle"
-            fontFamily="Lato, sans-serif" fontSize="8" fill="#6B6460"
+            fontFamily="Lato, sans-serif" fontSize="13" fill="#6B6460"
           >
             typical parents' purchase age
           </text>
@@ -134,7 +136,7 @@ export default function FirstTimeBuyer() {
               key={t.age}
               x={40} y={t.y + 3}
               textAnchor="end"
-              fontFamily="Lato, sans-serif" fontSize="9" fill="#6B6460"
+              fontFamily="Lato, sans-serif" fontSize="13" fill="#6B6460"
             >
               {t.age}
             </text>
@@ -146,7 +148,7 @@ export default function FirstTimeBuyer() {
               key={t.year}
               x={t.x} y={222}
               textAnchor="middle"
-              fontFamily="Lato, sans-serif" fontSize="9" fill="#6B6460"
+              fontFamily="Lato, sans-serif" fontSize="13" fill="#6B6460"
             >
               {t.year}
             </text>

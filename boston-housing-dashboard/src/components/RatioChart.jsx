@@ -61,7 +61,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
       <text
         x={PAD.left - 6} y={baseline + 4}
         textAnchor="end"
-        fontSize="9"
+        fontSize="13"
         fontFamily="Lato, sans-serif"
         fill="#8B6B4A"
         opacity="0.7"
@@ -79,7 +79,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
           x={PAD.left - 6}
           y={yScale(v) + 4}
           textAnchor="end"
-          fontSize="9"
+          fontSize="13"
           fontFamily="Lato, sans-serif"
           fill="#6B6460"
         >
@@ -115,7 +115,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
                 x={xScale(d.year)}
                 y={labelY}
                 textAnchor="middle"
-                fontSize="8"
+                fontSize="13"
                 fontFamily="Lato, sans-serif"
                 fill={isAbove ? '#4A7C74' : '#8B4A4A'}
               >
@@ -133,7 +133,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
           x={xScale(y)}
           y={H - 4}
           textAnchor="middle"
-          fontSize="9"
+          fontSize="13"
           fontFamily="Lato, sans-serif"
           fill="#6B6460"
         >
@@ -145,7 +145,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
       <text
         x={xScale(MAX_YEAR) - 2} y={PAD.top + 2}
         textAnchor="end"
-        fontSize="9"
+        fontSize="13"
         fontFamily="Lato, sans-serif"
         fill="#6B6460"
       >
@@ -154,7 +154,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
       <text
         x={xScale(MAX_YEAR) - 2} y={H - PAD.bottom - 2}
         textAnchor="end"
-        fontSize="9"
+        fontSize="13"
         fontFamily="Lato, sans-serif"
         fill="#6B6460"
       >

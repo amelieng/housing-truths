@@ -10,7 +10,12 @@
       "Bash(cp \"c:/Users/Vanilla/Downloads/State-of-ma/state-of-ma/house-that-income-cant-reach.html\" \"c:/Users/Vanilla/Downloads/State-of-ma/state-of-ma/vizzes/boston_homeownership_viz1.html\")",
       "Bash(cp \"c:/Users/Vanilla/Downloads/State-of-ma/state-of-ma/boston-housing-dashboard/preview.html\" \"c:/Users/Vanilla/Downloads/State-of-ma/state-of-ma/vizzes/boston_permits.html\")",
       "Bash(grep -E \"\\\\.html$|vizzes|housing\")",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(sed -i 's/font-size: 8px/font-size: 13px/g; s/font-size: 9px/font-size: 13px/g; s/font-size: 10px/font-size: 13px/g; s/font-size: 10\\\\.5px/font-size: 13px/g; s/font-size: 11px/font-size: 13px/g; s/font-size: 12px/font-size: 13px/g' boston-housing-dashboard/src/index.css)",
+      "Bash(sed -i \"s/fontSize: '8px'/fontSize: '13px'/g; s/fontSize: '9px'/fontSize: '13px'/g; s/fontSize: '10px'/fontSize: '13px'/g; s/fontSize: '11px'/fontSize: '13px'/g; s/fontSize: '12px'/fontSize: '13px'/g\" src/components/AffordabilityChart.jsx)",
+      "Bash(sed -i \"s/fontSize: '8px'/fontSize: '13px'/g; s/fontSize: '9px'/fontSize: '13px'/g; s/fontSize: '10px'/fontSize: '13px'/g; s/fontSize: '11px'/fontSize: '13px'/g; s/fontSize: '12px'/fontSize: '13px'/g\" boston-housing-dashboard/src/components/FirstTimeBuyer.jsx)",
+      "Bash(sed -i \"s/fontSize: '8px'/fontSize: '13px'/g; s/fontSize: '9px'/fontSize: '13px'/g; s/fontSize: '10px'/fontSize: '13px'/g; s/fontSize: '11px'/fontSize: '13px'/g; s/fontSize: '12px'/fontSize: '13px'/g\" boston-housing-dashboard/src/components/RenterGuess.jsx)",
+      "Bash(sed -i 's/fontSize=\"8\"/fontSize=\"13\"/g; s/fontSize=\"9\"/fontSize=\"13\"/g; s/fontSize=\"10\"/fontSize=\"13\"/g; s/fontSize=\"11\"/fontSize=\"13\"/g; s/fontSize=\"12\"/fontSize=\"13\"/g' boston-housing-dashboard/src/components/CrescentChart.jsx)"
     ]
   }
 }

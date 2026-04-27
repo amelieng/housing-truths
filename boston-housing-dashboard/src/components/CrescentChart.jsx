@@ -293,7 +293,7 @@ export default function CrescentChart({
                 key={era.start}
                 x={mx} y={PAD.top - 10}
                 textAnchor="middle"
-                fontSize="11"
+                fontSize="13"
                 fontFamily="Lato, sans-serif"
                 fill={c.label}
                 opacity="0.85"
@@ -309,7 +309,7 @@ export default function CrescentChart({
             return (
               <g key={v}>
                 <line x1={PAD.left} y1={y} x2={W - PAD.right} y2={y} stroke="#E5E0D9" strokeWidth="1" />
-                <text x={PAD.left - 6} y={y + 4} textAnchor="end" fontSize="11" fontFamily="Lato, sans-serif" fill="#6B6460">
+                <text x={PAD.left - 6} y={y + 4} textAnchor="end" fontSize="13" fontFamily="Lato, sans-serif" fill="#6B6460">
                   {v.toLocaleString()}
                 </text>
               </g>
@@ -321,7 +321,7 @@ export default function CrescentChart({
             x="16"
             y={PAD.top + CH / 2}
             textAnchor="middle"
-            fontSize="11"
+            fontSize="13"
             fontFamily="Lato, sans-serif"
             fill="#6B6460"
             transform={`rotate(-90, 16, ${PAD.top + CH / 2})`}
@@ -341,7 +341,7 @@ export default function CrescentChart({
               <text
                 x={xScale(yr)} y={PAD.top + CH + 18}
                 textAnchor="middle"
-                fontSize="11"
+                fontSize="13"
                 fontFamily="Lato, sans-serif"
                 fill="#6B6460"
               >

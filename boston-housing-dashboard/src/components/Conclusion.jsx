@@ -63,17 +63,17 @@ const LEGEND_DOTS = [
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function Conclusion() {
-  // 'project' | 'policy' | null — only one fork drawer open at a time
-  const [openDrawer, setOpenDrawer] = useState(null)
+  const [projectDrawerOpen, setProjectDrawerOpen] = useState(true)
+  const [policyDrawerOpen, setPolicyDrawerOpen] = useState(true)
   // 0–3 | null — only one decision map card expanded at a time
   const [openCard, setOpenCard] = useState(null)
 
   function handleProjectDrawer() {
-    setOpenDrawer(prev => prev === 'project' ? null : 'project')
+    setProjectDrawerOpen(prev => !prev)
   }
 
   function handlePolicyDrawer() {
-    setOpenDrawer(prev => prev === 'policy' ? null : 'policy')
+    setPolicyDrawerOpen(prev => !prev)
   }
 
   function handleCardClick(e) {
@@ -137,10 +137,10 @@ export default function Conclusion() {
             </div>
 
             <button className="conc-drawer-toggle" onClick={handleProjectDrawer}>
-              {openDrawer === 'project' ? '↑' : '↓'} never been? here's what to expect
+              {projectDrawerOpen ? '↑' : '↓'} never been? here's what to expect
             </button>
 
-            <div className={`conc-drawer${openDrawer === 'project' ? ' conc-drawer--open' : ''}`}>
+            <div className={`conc-drawer${projectDrawerOpen ? ' conc-drawer--open' : ''}`}>
               <div className="conc-drawer-inner">
 
                 <div className="conc-step">
@@ -231,10 +231,10 @@ export default function Conclusion() {
             </div>
 
             <button className="conc-drawer-toggle" onClick={handlePolicyDrawer}>
-              {openDrawer === 'policy' ? '↑' : '↓'} where to put your energy
+              {policyDrawerOpen ? '↑' : '↓'} where to put your energy
             </button>
 
-            <div className={`conc-drawer${openDrawer === 'policy' ? ' conc-drawer--open' : ''}`}>
+            <div className={`conc-drawer${policyDrawerOpen ? ' conc-drawer--open' : ''}`}>
               <div className="conc-drawer-inner">
 
                 <div className="conc-step">
@@ -327,8 +327,7 @@ export default function Conclusion() {
 
         {/* ── PART 3: ASYMMETRY NOTE ── */}
         <div className="conc-asymmetry">
-          Delaying homeownership from 30 to 40 costs a typical buyer roughly $150,000 in lost equity over a
-          lifetime — because the housing that would have let them buy sooner was never built. That shortage
+          The typical first-time buyer is now 40. In 1992 they were 28. Ten years of equity, delayed. That shortage
           was debated in public hearings and in legislative chambers. Most of those seats were empty.
         </div>
 

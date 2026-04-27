@@ -112,7 +112,7 @@ const LEAST_AFFORDABLE_YEAR = _LANDMARK_PCTS.reduce((a, b) => a.pct > b.pct ? a 
 
 // ── House animation helpers ────────────────────────────────────
 function houseScale(pct) {
-  const t = Math.min(1, Math.max(0, (pct - 0.28) / (0.55 - 0.28)));
+  const t = Math.min(1, Math.max(0, (pct - 0.28) / (1.40 - 0.28)));
   return 1.0 - t * 0.78;
 }
 function lerp(a, b, t) { return a + (b - a) * t; }
@@ -121,7 +121,7 @@ function easeInOut(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
 // ── Component ─────────────────────────────────────────────────
 export default function AffordabilityChart() {
   const [selectedYear, setSelectedYear] = useState(2024);
-  const [sidebarOpen, setSidebarOpen]   = useState(false);
+  const [sidebarOpen, setSidebarOpen]   = useState(true);
 
   const selectedIndex = RAW.findIndex(d => d.year === selectedYear);
   const fillPct       = `${(selectedIndex / (RAW.length - 1)) * 100}%`;
@@ -275,7 +275,7 @@ export default function AffordabilityChart() {
   };
   // Base pill style shared by both occupation and household-size pills
   const pillBase = {
-    fontFamily: "'Lato', sans-serif", fontSize: '10px', padding: '5px 8px',
+    fontFamily: "'Lato', sans-serif", fontSize: '13px', padding: '5px 8px',
     borderRadius: '5px', border: '1px solid transparent', color: '#6B6560',
     background: 'transparent', cursor: 'pointer', textAlign: 'left',
     width: '100%', display: 'flex', alignItems: 'center', gap: '5px',
@@ -360,7 +360,7 @@ export default function AffordabilityChart() {
     },
     contextNote: {
       fontFamily: "'Lato', sans-serif",
-      fontSize: '11px',
+      fontSize: '13px',
       color: '#A09C97',
       lineHeight: 1.65,
       marginBottom: '28px',
@@ -380,7 +380,7 @@ export default function AffordabilityChart() {
       alignItems: 'center',
       gap: '6px',
       fontFamily: "'Lato', sans-serif",
-      fontSize: '9px',
+      fontSize: '13px',
       color: '#A09C97',
       whiteSpace: 'nowrap',
     },
@@ -395,7 +395,6 @@ export default function AffordabilityChart() {
       gridTemplateColumns: 'repeat(4, 1fr)',
       marginTop: '16px',
       paddingTop: '16px',
-      borderTop: '1px solid #E2DDD6',
     },
     msFirst: {
       paddingRight: '16px',
@@ -407,7 +406,7 @@ export default function AffordabilityChart() {
     },
     msLbl: {
       fontFamily: "'Lato', sans-serif",
-      fontSize: '9px',
+      fontSize: '13px',
       textTransform: 'uppercase',
       letterSpacing: '0.07em',
       color: '#A09C97',
@@ -428,7 +427,7 @@ export default function AffordabilityChart() {
     },
     msDelta: {
       fontFamily: "'Lato', sans-serif",
-      fontSize: '10px',
+      fontSize: '13px',
       marginTop: '3px',
       display: 'flex',
       alignItems: 'center',
@@ -440,7 +439,7 @@ export default function AffordabilityChart() {
       borderTop: '1px solid #E2DDD6',
     },
     sourceText: {
-      fontSize: '11px',
+      fontSize: '13px',
       color: '#A09C97',
       fontFamily: "'Lato', sans-serif",
       lineHeight: 1.7,
@@ -513,7 +512,7 @@ export default function AffordabilityChart() {
       bottom: 'calc(100% + 5px)',
       left: 0,
       fontFamily: "'Lato', sans-serif",
-      fontSize: '9px',
+      fontSize: '13px',
       color: 'rgba(160,100,20,0.80)',
       whiteSpace: 'nowrap',
       pointerEvents: 'none',
@@ -524,7 +523,7 @@ export default function AffordabilityChart() {
       width: '620px',
       marginTop: '6px',
       fontFamily: "'Lato', sans-serif",
-      fontSize: '9px',
+      fontSize: '13px',
       color: '#A09C97',
     },
     annIncome: {
@@ -564,13 +563,13 @@ export default function AffordabilityChart() {
     },
     stageMain: {
       padding: '36px 40px 32px',
+      minHeight: '750px',
     },
     // ── Sidebar ──
     stageSidebar: {
       borderRight: '1px solid #E2DDD6',
       background: '#FAFAF8',
       position: 'relative',
-      overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
     },
@@ -586,13 +585,13 @@ export default function AffordabilityChart() {
       zIndex: 2,
     },
     tabChevron: {
-      fontSize: '11px',
+      fontSize: '13px',
       color: '#A09C97',
       lineHeight: 1,
     },
     tabLabel: {
       fontFamily: "'Lato', sans-serif",
-      fontSize: '9px',
+      fontSize: '13px',
       letterSpacing: '0.12em',
       textTransform: 'uppercase',
       color: '#A09C97',
@@ -603,21 +602,17 @@ export default function AffordabilityChart() {
       lineHeight: 1,
     },
     sidebarPanel: {
-      position: 'absolute',
-      inset: 0,
+      width: '100%',
       padding: '26px 14px 24px',
       display: 'flex',
       flexDirection: 'column',
-      opacity: 0,
-      pointerEvents: 'none',
-      overflow: 'hidden',
     },
     sidebarHeader: {
       marginBottom: '12px',
     },
     sidebarLabel: {
       fontFamily: "'Lato', sans-serif",
-      fontSize: '9px',
+      fontSize: '13px',
       textTransform: 'uppercase',
       letterSpacing: '0.1em',
       color: '#A09C97',
@@ -627,12 +622,10 @@ export default function AffordabilityChart() {
       display: 'flex',
       flexDirection: 'column',
       gap: '2px',
-      flex: 1,
-      overflowY: 'auto',
     },
     sidebarEyebrow: {
       fontFamily: "'DM Mono', monospace",
-      fontSize: '8px',
+      fontSize: '13px',
       letterSpacing: '0.1em',
       textTransform: 'uppercase',
       color: '#A09C97',
@@ -649,7 +642,7 @@ export default function AffordabilityChart() {
     },
     occPillBase: {
       fontFamily: "'Lato', sans-serif",
-      fontSize: '10px',
+      fontSize: '13px',
       padding: '5px 8px',
       borderRadius: '5px',
       border: '1px solid transparent',
@@ -664,7 +657,7 @@ export default function AffordabilityChart() {
     },
     occPillActiveMedian: {
       fontFamily: "'Lato', sans-serif",
-      fontSize: '10px',
+      fontSize: '13px',
       padding: '5px 8px',
       borderRadius: '5px',
       border: '1px solid rgba(59,107,138,0.35)',
@@ -696,7 +689,7 @@ export default function AffordabilityChart() {
       border: '1px solid #E2DDD6',
       cursor: 'pointer',
       fontFamily: "'Lato', sans-serif",
-      fontSize: '9px',
+      fontSize: '13px',
       letterSpacing: '0.05em',
       color: '#6B6560',
       padding: '5px 10px',
@@ -709,14 +702,12 @@ export default function AffordabilityChart() {
     },
     // ── Timeline ──
     timelineWrap: {
-      borderTop: '1px solid #E2DDD6',
       padding: '24px 40px 28px',
-      background: '#FAFAF8',
       overflow: 'visible',
     },
     timelineLabel: {
       fontFamily: "'Lato', sans-serif",
-      fontSize: '10px',
+      fontSize: '13px',
       letterSpacing: '0.1em',
       textTransform: 'uppercase',
       color: '#A09C97',
@@ -755,8 +746,8 @@ export default function AffordabilityChart() {
       alignItems: 'center',
     },
     tlDot: {
-      width: '10px',
-      height: '10px',
+      width: '20px',
+      height: '20px',
       borderRadius: '50%',
       background: '#FFFFFF',
       border: '2px solid #E2DDD6',
@@ -766,8 +757,8 @@ export default function AffordabilityChart() {
       flexShrink: 0,
     },
     tlDotPast: {
-      width: '10px',
-      height: '10px',
+      width: '20px',
+      height: '20px',
       borderRadius: '50%',
       background: '#3B6B8A',
       border: '2px solid #3B6B8A',
@@ -777,8 +768,8 @@ export default function AffordabilityChart() {
       flexShrink: 0,
     },
     tlDotActive: {
-      width: '10px',
-      height: '10px',
+      width: '20px',
+      height: '20px',
       borderRadius: '50%',
       background: '#3B6B8A',
       border: '2px solid #3B6B8A',
@@ -790,33 +781,33 @@ export default function AffordabilityChart() {
     },
     tlDotLabel: {
       position: 'absolute',
-      top: '16px',
+      top: '26px',
       left: '50%',
       transform: 'translateX(-50%)',
       fontFamily: "'Lato', sans-serif",
-      fontSize: '10px',
+      fontSize: '13px',
       color: '#A09C97',
       whiteSpace: 'nowrap',
       pointerEvents: 'none',
     },
     tlDotLabelPast: {
       position: 'absolute',
-      top: '16px',
+      top: '26px',
       left: '50%',
       transform: 'translateX(-50%)',
       fontFamily: "'Lato', sans-serif",
-      fontSize: '10px',
+      fontSize: '13px',
       color: '#3B6B8A',
       whiteSpace: 'nowrap',
       pointerEvents: 'none',
     },
     tlDotLabelActive: {
       position: 'absolute',
-      top: '16px',
+      top: '26px',
       left: '50%',
       transform: 'translateX(-50%)',
       fontFamily: "'Lato', sans-serif",
-      fontSize: '10px',
+      fontSize: '13px',
       color: '#3B6B8A',
       fontWeight: 500,
       whiteSpace: 'nowrap',
@@ -830,7 +821,7 @@ export default function AffordabilityChart() {
     },
     tlBtn: {
       fontFamily: "'Lato', sans-serif",
-      fontSize: '11px',
+      fontSize: '13px',
       letterSpacing: '0.06em',
       color: '#6B6560',
       background: 'transparent',
@@ -845,7 +836,7 @@ export default function AffordabilityChart() {
     // ── Household size price annotation ──
     priceAnnotation: {
       fontFamily: "'DM Mono', monospace",
-      fontSize: '11px',
+      fontSize: '13px',
       color: '#8B6F47',
       marginTop: '3px',
       lineHeight: 1.5,
@@ -867,7 +858,7 @@ export default function AffordabilityChart() {
       borderRadius: '4px',
       marginTop: '10px',
       fontFamily: "'Lato', sans-serif",
-      fontSize: '10px',
+      fontSize: '13px',
       fontWeight: 500,
       letterSpacing: '0.05em',
       whiteSpace: 'nowrap',
@@ -907,20 +898,22 @@ export default function AffordabilityChart() {
           }}>
 
             {/* Collapsed tab — hidden when open */}
-            <div
-              style={{ ...S.sidebarTab, opacity: sidebarOpen ? 0 : 1, pointerEvents: sidebarOpen ? 'none' : 'auto' }}
-              onClick={() => setSidebarOpen(true)}
-            >
-              <div style={S.tabChevron}>›</div>
-              <div style={S.tabLabel}>What if you were a...</div>
-            </div>
+            {!sidebarOpen && (
+              <div
+                style={S.sidebarTab}
+                onClick={() => setSidebarOpen(true)}
+              >
+                <div style={S.tabChevron}>›</div>
+                <div style={S.tabLabel}>What if you were a...</div>
+              </div>
+            )}
 
             {/* Expanded panel — visible when open */}
-            <div style={{ ...S.sidebarPanel, opacity: sidebarOpen ? 1 : 0, pointerEvents: sidebarOpen ? 'all' : 'none' }}>
+            {sidebarOpen && <div style={S.sidebarPanel}>
               <div style={S.sidebarHeader}>
                 <div style={S.sidebarLabel}>What if you were a...</div>
               </div>
-              <div style={S.sidebarPills}>
+              <div style={S.sidebarPills} className="aff-sidebar-pills">
                 <button style={pillStyle('median')} onClick={() => { setSelectedOccupation('median'); setSelectedHHSize(null); }}>
                   <span style={{ ...S.pillDot, background: '#3B6B8A' }} />Average Bostonian
                 </button>
@@ -955,10 +948,6 @@ export default function AffordabilityChart() {
                 {/* ── Household size lens ── */}
                 <div style={S.sidebarDivider} />
                 <div style={S.sidebarEyebrow}>or by household size</div>
-                <div style={S.hhCallout}>
-                  Home price reflects the size of home each household would realistically need.
-                  Larger homes cost more — making the affordability gap wider than it first appears.
-                </div>
                 {householdSizeOptions.map(opt => (
                   <button
                     key={opt.id}
@@ -969,11 +958,14 @@ export default function AffordabilityChart() {
                     {opt.label}
                   </button>
                 ))}
+                <div style={{ ...S.hhCallout, fontSize: '13px' }}>
+                  Home price based on a bedroom-appropriate size for your household.
+                </div>
               </div>
               <div style={S.sidebarFooter}>
                 <button style={S.sidebarCollapse} onClick={() => setSidebarOpen(false)}>‹ Minimize</button>
               </div>
-            </div>
+            </div>}
 
           </div>{/* /stageSidebar */}
 
@@ -981,7 +973,7 @@ export default function AffordabilityChart() {
           <div style={S.stageMain}>
 
       {/* ── Stage header ── */}
-      <div style={{ marginBottom: '10px' }}>
+      <div style={{ marginBottom: '10px', minHeight: '160px' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '8px', flexWrap: 'wrap' }}>
           <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: '36px', fontWeight: 400, letterSpacing: '-0.4px', lineHeight: 1, color: TIER_COLORS[stageTier] }}>
             {stageLabel}
@@ -1037,9 +1029,41 @@ export default function AffordabilityChart() {
         </div>
       </div>
 
+      {/* ── Mini stats strip ── */}
+      <div style={S.miniStats}>
+        <div style={S.msFirst}>
+          <div style={S.msLbl}>Monthly mortgage payment</div>
+          <div style={over ? S.msValRed : S.msVal}>{fmt(mo_mtg)}</div>
+          <div style={S.msDelta} />
+        </div>
+        <div style={S.msRest}>
+          <div style={S.msLbl}>Left over each month</div>
+          <div style={leftover < 0 ? S.msValRed : S.msVal}>{fmt(leftover)}</div>
+          <div style={S.msDelta} />
+        </div>
+        <div style={S.msRest}>
+          <div style={S.msLbl}>Annual income needed to qualify</div>
+          <div style={over ? S.msValRed : S.msVal}>{fmt(needed_yr)}</div>
+          <div style={S.msDelta} />
+        </div>
+        <div style={S.msRest}>
+          <div style={S.msLbl}>Mortgage rate</div>
+          <div style={S.msVal}>{rawYear.rate}%</div>
+          <div style={S.msDelta} />
+        </div>
+      </div>
+
       {/* ── House scene — animated ── */}
-      <div style={S.houseScene}>
-        <svg width="480" height="220" viewBox="0 0 480 220" style={{ display: 'block' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '28px 0 24px' }}>
+        <button
+          style={atFirst ? { ...S.tlBtn, opacity: 0.35, cursor: 'not-allowed' } : S.tlBtn}
+          onClick={goEarlier}
+          disabled={atFirst}
+        >
+          ← Earlier
+        </button>
+        <div style={{ ...S.houseScene, margin: 0, flex: 1 }}>
+          <svg width="480" height="220" viewBox="0 0 480 220" style={{ display: 'block' }}>
           <defs>
             <linearGradient id="housePathGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%"   stopColor="#C8A882" stopOpacity={pFarOp} />
@@ -1099,6 +1123,14 @@ export default function AffordabilityChart() {
             <rect x={stX} y={stY} width={stW} height={stH} fill={HOUSE_COLORS.step} rx="1" />
           </g>
         </svg>
+        </div>
+        <button
+          style={atLast ? { ...S.tlBtn, opacity: 0.35, cursor: 'not-allowed' } : S.tlBtn}
+          onClick={goLater}
+          disabled={atLast}
+        >
+          Later →
+        </button>
       </div>
 
       {/* ── Target home price (household size lens only) ── */}
@@ -1148,17 +1180,17 @@ export default function AffordabilityChart() {
                 boxSizing: 'border-box',
               }}>
                 {tooltip.which === 'income' && (<>
-                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: '#8B6F47', lineHeight: 1.4 }}>annual income</div>
+                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: '13px', color: '#8B6F47', lineHeight: 1.4 }}>annual income</div>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: '18px', color: '#F7F6F3', lineHeight: 1.2 }}>{fmt(income)}</div>
                   <div style={{ fontSize: '13px', color: '#C4BDB8' }}>({fmt(mo_inc)} / month gross)</div>
                 </>)}
                 {tooltip.which === 'limit' && (<>
-                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: '#8B6F47', lineHeight: 1.4 }}>affordability limit · 28% rule</div>
+                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: '13px', color: '#8B6F47', lineHeight: 1.4 }}>affordability limit · 28% rule</div>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: '18px', color: '#F7F6F3', lineHeight: 1.2 }}>{fmt(afford)} / month</div>
                   <div style={{ fontSize: '13px', color: '#C4BDB8' }}>maximum monthly housing cost</div>
                 </>)}
                 {tooltip.which === 'mortgage' && (<>
-                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: '#8B6F47', lineHeight: 1.4 }}>monthly mortgage</div>
+                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: '13px', color: '#8B6F47', lineHeight: 1.4 }}>monthly mortgage</div>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: '18px', color: '#F7F6F3', lineHeight: 1.2 }}>{fmt(mo_mtg)} / month</div>
                   <div style={{ fontSize: '13px', color: '#C4BDB8' }}>30-yr fixed · median Boston home</div>
                   <div style={{ fontSize: '13px', color: over ? '#F5C4B3' : '#9FE1CB', marginTop: '2px' }}>
@@ -1290,7 +1322,7 @@ export default function AffordabilityChart() {
           {hasExt && (
             <div style={{ ...S.barExtension, width: `${extW}px` }}>
               <span style={extLong
-                ? { position: 'absolute', top: '50%', left: '8px', transform: 'translateY(-50%)', fontFamily: "'Lato', sans-serif", fontSize: '9px', fontWeight: 500, color: 'rgba(160,100,20,0.85)', whiteSpace: 'nowrap', pointerEvents: 'none' }
+                ? { position: 'absolute', top: '50%', left: '8px', transform: 'translateY(-50%)', fontFamily: "'Lato', sans-serif", fontSize: '13px', fontWeight: 500, color: 'rgba(160,100,20,0.85)', whiteSpace: 'nowrap', pointerEvents: 'none' }
                 : S.extLabelAbove
               }>
                 {extLabelText}
@@ -1310,93 +1342,35 @@ export default function AffordabilityChart() {
         </div>
       </div>
 
-      {/* ── Mini stats strip ── */}
-      <div style={S.miniStats}>
-        <div style={S.msFirst}>
-          <div style={S.msLbl}>Monthly mortgage payment</div>
-          <div style={over ? S.msValRed : S.msVal}>{fmt(mo_mtg)}</div>
-          <div style={S.msDelta} />
-        </div>
-        <div style={S.msRest}>
-          <div style={S.msLbl}>Left over each month</div>
-          <div style={leftover < 0 ? S.msValRed : S.msVal}>{fmt(leftover)}</div>
-          <div style={S.msDelta} />
-        </div>
-        <div style={S.msRest}>
-          <div style={S.msLbl}>Annual income needed to qualify</div>
-          <div style={over ? S.msValRed : S.msVal}>{fmt(needed_yr)}</div>
-          <div style={S.msDelta} />
-        </div>
-        <div style={S.msRest}>
-          <div style={S.msLbl}>Mortgage rate</div>
-          <div style={S.msVal}>{rawYear.rate}%</div>
-          <div style={S.msDelta} />
+      {/* ── Timeline ── */}
+      <div style={S.timelineWrap}>
+        <div style={S.timelineTrack}>
+          <div style={S.tlLine} />
+          <div style={{ ...S.tlFill, width: fillPct }} />
+          <div style={S.tlDots}>
+            {RAW.map((d, i) => {
+              const isPast   = i < selectedIndex;
+              const isActive = d.year === selectedYear;
+              const dotStyle   = isActive ? S.tlDotActive : isPast ? S.tlDotPast : S.tlDot;
+              const labelStyle = isActive ? S.tlDotLabelActive : isPast ? S.tlDotLabelPast : S.tlDotLabel;
+              return (
+                <div
+                  key={d.year}
+                  style={{ ...dotStyle, cursor: 'pointer' }}
+                  onClick={() => setSelectedYear(d.year)}
+                >
+                  <span style={labelStyle}>{d.year}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* ── $179K callout — default state only ── */}
-      {selectedOccupation === 'median' && selectedHHSize === null && (
-        <div style={{
-          marginTop: '20px',
-          background: '#F0EDE8',
-          borderLeft: '2px solid #8B4A4A',
-          padding: '0.75rem 1rem',
-          fontFamily: "'Lato', sans-serif",
-          fontSize: '14px',
-          color: '#4a3f38',
-          lineHeight: 1.6,
-          borderRadius: '0 4px 4px 0',
-          maxWidth: '620px',
-        }}>
-          A household earning Boston's median income would need to nearly double it — to $179K — just to qualify for a mortgage on a median-priced home today.
-        </div>
-      )}
 
           </div>{/* /stageMain */}
 
         </div>{/* /stageLayout */}
-
-        {/* ── Timeline ── */}
-        <div style={S.timelineWrap}>
-          <div style={S.timelineLabel}>Move through time</div>
-          <div style={S.timelineTrack}>
-            <div style={S.tlLine} />
-            <div style={{ ...S.tlFill, width: fillPct }} />
-            <div style={S.tlDots}>
-              {RAW.map((d, i) => {
-                const isPast   = i < selectedIndex;
-                const isActive = d.year === selectedYear;
-                const dotStyle   = isActive ? S.tlDotActive : isPast ? S.tlDotPast : S.tlDot;
-                const labelStyle = isActive ? S.tlDotLabelActive : isPast ? S.tlDotLabelPast : S.tlDotLabel;
-                return (
-                  <div
-                    key={d.year}
-                    style={{ ...dotStyle, cursor: 'pointer' }}
-                    onClick={() => setSelectedYear(d.year)}
-                  >
-                    <span style={labelStyle}>{d.year}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div style={S.tlNav}>
-            <button
-              style={atFirst ? { ...S.tlBtn, opacity: 0.35, cursor: 'not-allowed' } : S.tlBtn}
-              onClick={goEarlier}
-              disabled={atFirst}
-            >
-              ← Earlier
-            </button>
-            <button
-              style={atLast ? { ...S.tlBtn, opacity: 0.35, cursor: 'not-allowed' } : S.tlBtn}
-              onClick={goLater}
-              disabled={atLast}
-            >
-              Later →
-            </button>
-          </div>
-        </div>
 
       </div>{/* /stage */}
 
