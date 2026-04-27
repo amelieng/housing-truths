@@ -65,24 +65,24 @@ export default function FirstTimeBuyer() {
           <p className="ftb-hero-yr">1981</p>
           <div className="ftb-hero-age">29</div>
           <p className="ftb-hero-age-lbl">median age at first purchase</p>
-          <p className="ftb-hero-share">40% of all buyers</p>
+          <p className="ftb-hero-share">40% of all first-time buyers</p>
         </div>
 
         <div className="ftb-then-now-arrow" aria-hidden="true">→</div>
 
         <div className="ftb-hero-card ftb-hero-card--now">
-          <p className="ftb-hero-era">Today's first-time buyer</p>
+          <p className="ftb-hero-era">Your generation</p>
           <p className="ftb-hero-yr">2025</p>
           <div className="ftb-hero-age">40</div>
           <p className="ftb-hero-age-lbl">median age at first purchase</p>
-          <p className="ftb-hero-share">21% of all buyers</p>
+          <p className="ftb-hero-share">21% of all first-time buyers</p>
         </div>
 
       </div>
 
       {/* ── Part 2: Age trend line chart ── */}
       <div className="ftb-chart-outer">
-        <p className="ftb-chart-eyebrow">Median first-time buyer age · NAR, 1981–2025</p>
+        <p className="ftb-chart-eyebrow" style={{ fontFamily: "'Oswald', sans-serif", fontSize: '16px', color: '#1C1916' }}>Median first-time buyer age · NAR, 1981–2025</p>
         <svg
           viewBox="0 0 520 250"
           width="100%"
@@ -110,7 +110,7 @@ export default function FirstTimeBuyer() {
           <text
             x={200} y={189}
             textAnchor="middle"
-            fontFamily="'DM Mono', monospace" fontSize="8" fill="#A09C97"
+            fontFamily="Lato, sans-serif" fontSize="8" fill="#6B6460"
           >
             1981 baseline
           </text>
@@ -123,7 +123,7 @@ export default function FirstTimeBuyer() {
           <text
             x={280} y={174}
             textAnchor="middle"
-            fontFamily="'DM Mono', monospace" fontSize="8" fill="#C4BDB8"
+            fontFamily="Lato, sans-serif" fontSize="8" fill="#6B6460"
           >
             typical parents' purchase age
           </text>
@@ -134,7 +134,7 @@ export default function FirstTimeBuyer() {
               key={t.age}
               x={40} y={t.y + 3}
               textAnchor="end"
-              fontFamily="'DM Mono', monospace" fontSize="9" fill="#A09C97"
+              fontFamily="Lato, sans-serif" fontSize="9" fill="#6B6460"
             >
               {t.age}
             </text>
@@ -146,7 +146,7 @@ export default function FirstTimeBuyer() {
               key={t.year}
               x={t.x} y={222}
               textAnchor="middle"
-              fontFamily="'DM Mono', monospace" fontSize="9" fill="#A09C97"
+              fontFamily="Lato, sans-serif" fontSize="9" fill="#6B6460"
             >
               {t.year}
             </text>

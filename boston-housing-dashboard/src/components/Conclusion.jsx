@@ -421,12 +421,6 @@ export default function Conclusion() {
           choices — which means it can be the result of different choices.
         </p>
 
-        {/* ── PART 6: CLOSING ── */}
-        <hr className="div" />
-        <div className="conc-closing">
-          You've seen the numbers. The numbers were always there.<br />
-          Now you have context to go with them.
-        </div>
 
       </div>
     </section>

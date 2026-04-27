@@ -120,7 +120,7 @@ function easeInOut(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
 
 // ── Component ─────────────────────────────────────────────────
 export default function AffordabilityChart() {
-  const [selectedYear, setSelectedYear] = useState(2019);
+  const [selectedYear, setSelectedYear] = useState(2024);
   const [sidebarOpen, setSidebarOpen]   = useState(false);
 
   const selectedIndex = RAW.findIndex(d => d.year === selectedYear);

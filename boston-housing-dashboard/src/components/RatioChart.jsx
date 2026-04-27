@@ -81,7 +81,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
           textAnchor="end"
           fontSize="9"
           fontFamily="Lato, sans-serif"
-          fill="#C4BDB7"
+          fill="#6B6460"
         >
           {v}
         </text>
@@ -135,7 +135,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
           textAnchor="middle"
           fontSize="9"
           fontFamily="Lato, sans-serif"
-          fill="#A09C97"
+          fill="#6B6460"
         >
           {y}
         </text>
@@ -147,7 +147,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
         textAnchor="end"
         fontSize="9"
         fontFamily="Lato, sans-serif"
-        fill="#A09C97"
+        fill="#6B6460"
       >
         ↑ more built than needed
       </text>
@@ -156,7 +156,7 @@ export default function RatioChart({ ratioData, onTooltip }) {
         textAnchor="end"
         fontSize="9"
         fontFamily="Lato, sans-serif"
-        fill="#A09C97"
+        fill="#6B6460"
       >
         ↓ more households than units
       </text>

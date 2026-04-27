@@ -309,7 +309,7 @@ export default function CrescentChart({
             return (
               <g key={v}>
                 <line x1={PAD.left} y1={y} x2={W - PAD.right} y2={y} stroke="#E5E0D9" strokeWidth="1" />
-                <text x={PAD.left - 6} y={y + 4} textAnchor="end" fontSize="11" fontFamily="Lato, sans-serif" fill="#C4BDB7">
+                <text x={PAD.left - 6} y={y + 4} textAnchor="end" fontSize="11" fontFamily="Lato, sans-serif" fill="#6B6460">
                   {v.toLocaleString()}
                 </text>
               </g>
@@ -323,7 +323,7 @@ export default function CrescentChart({
             textAnchor="middle"
             fontSize="11"
             fontFamily="Lato, sans-serif"
-            fill="#A09C97"
+            fill="#6B6460"
             transform={`rotate(-90, 16, ${PAD.top + CH / 2})`}
           >
             Units permitted
@@ -343,7 +343,7 @@ export default function CrescentChart({
                 textAnchor="middle"
                 fontSize="11"
                 fontFamily="Lato, sans-serif"
-                fill="#A09C97"
+                fill="#6B6460"
               >
                 {yr}
               </text>
@@ -497,6 +497,17 @@ export default function CrescentChart({
           </g>
         </svg>
       </div>
-    </div>
+    <p style={{
+      fontFamily: "'DM Mono', monospace",
+      fontSize: '11px',
+      color: '#A09C97',
+      lineHeight: 1.6,
+      marginTop: '12px',
+      paddingLeft: '4px',
+    }}>
+      Permits: U.S. Census Bureau, Building Permits Survey · census.gov/construction/bpermits ·
+      Household demand: calculated from ACS Table B11001 · 2024 demand estimated
+    </p>
+  </div>
   )
 }
