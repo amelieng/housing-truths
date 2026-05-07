@@ -360,6 +360,7 @@ export default function App() {
             marginBottom: '28px',
           }}>
             <li>NAR Profile of Home Buyers and Sellers, 2024–2025 — first-time buyer age trends (1981–2025), national data</li>
+            <li>Boston Indicators, Greater Boston Housing Report Card, 2025 — household income required to afford a starter home in Boston</li>
             <li>Redfin Data Center, 2012–2024 — Boston home price data</li>
             <li>PropertyShark / MAR, 2005–2011 — historical Boston home price data</li>
             <li>U.S. Census ACS 1-year, Table B19013 — median household income</li>

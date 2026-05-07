@@ -8,15 +8,15 @@ import { useState, useRef } from 'react'
 // ── Data ─────────────────────────────────────────────────────────────────────
 // Pre-computed SVG coordinates for the age trend line
 // ViewBox: 0 0 520 250  |  plot x=[44,480] y=[20,206]
-// xScale: 44 + (year−1981) × 9.909   |   yScale: 206 − (age−28) × 13.286
+// xScale: 44 + (year−1992) × 13.212   |   yScale: 206 − (age−28) × 13.286
 const CHART_POINTS = [
-  { year: 1992, age: 28, x: 153, y: 206 },
-  { year: 2000, age: 32, x: 232, y: 153 },
-  { year: 2010, age: 30, x: 331, y: 179 },
-  { year: 2018, age: 32, x: 411, y: 153 },
-  { year: 2021, age: 33, x: 440, y: 140 },
-  { year: 2022, age: 36, x: 450, y: 100 },
-  { year: 2024, age: 38, x: 470, y:  73 },
+  { year: 1992, age: 28, x:  44, y: 206 },
+  { year: 2000, age: 32, x: 150, y: 153 },
+  { year: 2010, age: 30, x: 282, y: 179 },
+  { year: 2018, age: 32, x: 388, y: 153 },
+  { year: 2021, age: 33, x: 427, y: 140 },
+  { year: 2022, age: 36, x: 440, y: 100 },
+  { year: 2024, age: 38, x: 467, y:  73 },
   { year: 2025, age: 40, x: 480, y:  47 },
 ]
 
@@ -32,15 +32,15 @@ const Y_TICKS = [
 
 // x positions for x-axis labels
 const X_TICKS = [
-  { year: 1992, x: 153 },
-  { year: 2000, x: 232 },
-  { year: 2010, x: 331 },
+  { year: 1992, x:  44 },
+  { year: 2000, x: 150 },
+  { year: 2010, x: 282 },
   { year: 2025, x: 480 },
 ]
 
 const PORTRAIT_CARDS = [
   { label: 'median age',            stat: '38–40',   body: 'a decade older than their parents' },
-  { label: 'household income',      stat: '$97K',    body: 'needed to afford a monthly mortgage payment' },
+  { label: 'household income',      stat: '$162K',   body: 'needed to afford a starter home in Boston' },
   { label: 'down payment',          stat: '9–10%',   body: 'highest since 1989' },
   { label: 'have kids at home',     stat: '27%',     body: 'down from 58% in 1985' },
   { label: 'more in rent a first-time buyer pays today than in 2013', stat: '+69%', body: '' },
@@ -169,7 +169,7 @@ export default function FirstTimeBuyer() {
           />
 
           {/* Halos for highlighted points */}
-          <circle cx={153} cy={206} r={10} fill="rgba(139,74,74,0.07)" stroke="#C4A8A8" strokeWidth="1" />
+          <circle cx={44}  cy={206} r={10} fill="rgba(139,74,74,0.07)" stroke="#C4A8A8" strokeWidth="1" />
           <circle cx={480} cy={47}  r={10} fill="rgba(139,74,74,0.07)" stroke="#C4A8A8" strokeWidth="1" />
 
           {/* Data point dots + hit areas */}
@@ -190,13 +190,13 @@ export default function FirstTimeBuyer() {
           ))}
 
           {/* Label connectors */}
-          <line x1={153} y1={172} x2={153} y2={206} stroke="#C4A8A8" strokeWidth="1" opacity="0.5" />
+          <line x1={54}  y1={172} x2={44}  y2={206} stroke="#C4A8A8" strokeWidth="1" opacity="0.5" />
           <line x1={460} y1={37}  x2={480} y2={47}  stroke="#C4A8A8" strokeWidth="1" opacity="0.5" />
 
           {/* Label box: 1992 */}
-          <rect x={128} y={148} width={50} height={24} rx={2} fill="#F7F6F3" stroke="#D8CECE" strokeWidth="1" />
-          <text x={153} y={159} textAnchor="middle" fontFamily="Lato, sans-serif" fontSize="10" fontWeight="700" fill="#8B7070">28 y/o</text>
-          <text x={153} y={169} textAnchor="middle" fontFamily="Lato, sans-serif" fontSize="8" fill="#A09090">1992</text>
+          <rect x={54} y={148} width={50} height={24} rx={2} fill="#F7F6F3" stroke="#D8CECE" strokeWidth="1" />
+          <text x={79} y={159} textAnchor="middle" fontFamily="Lato, sans-serif" fontSize="10" fontWeight="700" fill="#8B7070">28 y/o</text>
+          <text x={79} y={169} textAnchor="middle" fontFamily="Lato, sans-serif" fontSize="8" fill="#A09090">1992</text>
 
           {/* Label box: 2025 */}
           <rect x={435} y={13} width={50} height={24} rx={2} fill="#F7F6F3" stroke="#D8CECE" strokeWidth="1" />
@@ -238,7 +238,7 @@ export default function FirstTimeBuyer() {
 
       {/* ── Source ── */}
       <p className="ftb-source" style={{ marginTop: '16px' }}>
-        Sources: NAR Profile of Home Buyers and Sellers, 2024–2025 · National data ·
+        Sources: Boston Indicators, Greater Boston Housing Report Card, 2025 ·
         Boston buyers face additional pressure from higher local home prices
       </p>
 

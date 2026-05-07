@@ -17,7 +17,8 @@
       "Bash(sed -i \"s/fontSize: '8px'/fontSize: '13px'/g; s/fontSize: '9px'/fontSize: '13px'/g; s/fontSize: '10px'/fontSize: '13px'/g; s/fontSize: '11px'/fontSize: '13px'/g; s/fontSize: '12px'/fontSize: '13px'/g\" boston-housing-dashboard/src/components/RenterGuess.jsx)",
       "Bash(sed -i 's/fontSize=\"8\"/fontSize=\"13\"/g; s/fontSize=\"9\"/fontSize=\"13\"/g; s/fontSize=\"10\"/fontSize=\"13\"/g; s/fontSize=\"11\"/fontSize=\"13\"/g; s/fontSize=\"12\"/fontSize=\"13\"/g' boston-housing-dashboard/src/components/CrescentChart.jsx)",
       "Bash(start http://localhost:5173)",
-      "PowerShell(Start-Process \"http://localhost:5173\")"
+      "PowerShell(Start-Process \"http://localhost:5173\")",
+      "Bash(start *)"
     ]
   }
 }
