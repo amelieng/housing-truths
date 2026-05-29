@@ -64,7 +64,9 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
       "Bash(git -C \"C:/Users/Vanilla/Downloads/State-of-ma/state-of-ma\" add boston-housing-dashboard/src/components/AffordabilityChart.jsx)",
       "Bash(git -C \"C:/Users/Vanilla/Downloads/State-of-ma/state-of-ma\" commit -m \"Update\")",
-      "Bash(git -C \"C:/Users/Vanilla/Downloads/State-of-ma/state-of-ma\" push origin main)"
+      "Bash(git -C \"C:/Users/Vanilla/Downloads/State-of-ma/state-of-ma\" push origin main)",
+      "Bash(rm boston-housing-dashboard/.env)",
+      "Bash(npm uninstall *)"
     ]
   }
 }
